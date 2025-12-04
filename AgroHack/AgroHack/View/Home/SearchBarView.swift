@@ -16,9 +16,9 @@ struct SearchBarView: View {
                 .foregroundColor(.gray)
             TextField("Pesquisar alimento...", text: $searchText)
         }
-        .padding(10)
+        .padding(20)
         .background(Color(.systemGray6))
-        .cornerRadius(10)
+        .cornerRadius(100)
     }
 }
 

@@ -8,61 +8,46 @@
 import SwiftUI
 
 struct HomeView: View {
+
+    // Altura do Header (ajuste conforme o layout)
+    let headerHeight: CGFloat = 260
+
     var body: some View {
         NavigationStack {
-            
-            // O ZStack garante que o botão flutuante fique por cima (overlay) de tudo
             ZStack(alignment: .bottomTrailing) {
-                
-                // 1. Conteúdo Principal (Scrollable)
+
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 20) {
-                        
-                        // Barra de Pesquisa
-                        SearchBarView()
-                        
-                        // Bloco de Clima
+                    
+                    VStack(alignment: .leading) {
+                        // HEADER FIXO COMO FUNDO
+                        HeaderHome()
+                            .ignoresSafeArea(edges: .top)
+                            .padding(.top, -70)
+
+                        // WEATHER CARD (agora dentro do scroll)
                         Image("WeatherCard")
-                        
-                        // Plantações Atuais (AGORA SEM O BOTÃO DE ADICIONAR CARD)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.horizontal)
+                            .padding(.top, -100)
+
+                        // Plantações Atuais
                         CurrentCropsSection()
-                            .padding(.bottom, 80) // Adiciona espaço no final para o FAB não cobrir o último item
+                            .padding()
                     }
-                    .padding(.top, 10)
-                    .padding(.horizontal)
+
                 }
-//                .navigationTitle("Olá, Bom Dia")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        VStack(alignment: .leading) {
-                            Text("Olá, Bom Dia")
-                                .font(.title2)
-                                .bold()
-                            Text("Domingo, 07 Dez 2025")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            // Ação de Notificação
-                        } label: {
-                            Image(systemName: "bell.fill")
-                                .foregroundColor(Color("colorPrimal"))
-                        }
-                    }
-                }
-                .background(Color(.systemBackground))
-                
-                // 2. Botão Flutuante (Floating Action Button - FAB)
+
+                // FAB
                 FloatingAddButton()
                     .padding(.trailing, 20)
-                    .padding(.bottom, 10) // Afasta da barra de tabs
-            }
+                    .padding(.bottom, 10)
+                    .frame(maxHeight: .infinity, alignment: .bottomTrailing)
+            }.background(Color.secondary.opacity(0.2))
         }
     }
 }
+
 #Preview {
     HomeView()
 }

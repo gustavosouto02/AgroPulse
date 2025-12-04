@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct AgroHackApp: App {
+    @StateObject var chatVm = ChatBotViewModel(manager: ManagerChat())
+    @StateObject private var appState = AppState()
     var body: some Scene {
         WindowGroup {
             ContentView()

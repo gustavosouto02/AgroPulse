@@ -22,7 +22,7 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-                Text("IA de Foto")
+                ChatBotView(chatVm: ChatBotViewModel())
                     .tabItem {
                         Label("IA de foto", systemImage: "message")
                     }

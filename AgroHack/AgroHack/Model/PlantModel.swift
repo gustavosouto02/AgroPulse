@@ -40,6 +40,7 @@ class PlantModel: Identifiable {
         self.estagio = estagio
         self.fertilizantes = fertilizantes
         self.irrigacao = irrigacao
+
         self.dataGerminacao = dataGerminacao
         self.dataColheita = dataColheita
         self.ultimaRega = ultimaRega

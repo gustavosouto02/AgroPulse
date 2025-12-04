@@ -33,6 +33,7 @@ struct ContentView: View {
                     }
             }
             .tint(Color("colorPrimal")) // Cor dos ícones ativos na TabView
+            .preferredColorScheme(.light)
         }
     }
 

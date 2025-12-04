@@ -9,16 +9,41 @@ import SwiftUI
 
 struct SearchBarView: View {
     @State private var searchText: String = ""
+    @FocusState private var isFocused: Bool
     
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-            TextField("Pesquisar alimento...", text: $searchText)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 18, height: 18)
+                .foregroundStyle(.white.opacity(0.9))
+
+            ZStack(alignment: .leading) {
+                // Placeholder branco quando o campo está vazio
+                if searchText.isEmpty {
+                    Text("Pesquisar alimento...")
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+
+                TextField("", text: $searchText)
+                    .textInputAutocapitalization(.never)
+                    .disableAutocorrection(true)
+                    .foregroundStyle(.white)
+                    .focused($isFocused)
+            }
         }
-        .padding(20)
-        .background(Color(.systemGray6))
-        .cornerRadius(100)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 16)
+        .background(
+            RoundedRectangle(cornerRadius: 100, style: .continuous)
+                .fill(.ultraThinMaterial)
+                .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 4)
+        )
+        .contentShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
+        .onTapGesture {
+            isFocused = false
+        }
     }
 }
 

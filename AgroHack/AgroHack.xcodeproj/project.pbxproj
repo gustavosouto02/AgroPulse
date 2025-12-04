@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CC91CFCB2EE13BEF0059C4CB /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC91CFCA2EE13BEF0059C4CB /* UIImage+Extension.swift */; };
+		CC91D0622EE147920059C4CB /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = CC91D0612EE147920059C4CB /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		63CAA62E2EDFE85C00E962FE /* AgroHack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgroHack.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC91CFCA2EE13BEF0059C4CB /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -28,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC91D0622EE147920059C4CB /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -37,7 +37,6 @@
 		63CAA6252EDFE85C00E962FE = {
 			isa = PBXGroup;
 			children = (
-				CC91CFCA2EE13BEF0059C4CB /* UIImage+Extension.swift */,
 				63CAA6302EDFE85C00E962FE /* AgroHack */,
 				63CAA62F2EDFE85C00E962FE /* Products */,
 			);
@@ -71,6 +70,7 @@
 			);
 			name = AgroHack;
 			packageProductDependencies = (
+				CC91D0612EE147920059C4CB /* GoogleGenerativeAI */,
 			);
 			productName = AgroHack;
 			productReference = 63CAA62E2EDFE85C00E962FE /* AgroHack.app */;
@@ -100,6 +100,9 @@
 			);
 			mainGroup = 63CAA6252EDFE85C00E962FE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CC91D0602EE147920059C4CB /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 63CAA62F2EDFE85C00E962FE /* Products */;
 			projectDirPath = "";
@@ -125,7 +128,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC91CFCB2EE13BEF0059C4CB /* UIImage+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +343,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CC91D0602EE147920059C4CB /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC91D0612EE147920059C4CB /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC91D0602EE147920059C4CB /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 63CAA6262EDFE85C00E962FE /* Project object */;
 }

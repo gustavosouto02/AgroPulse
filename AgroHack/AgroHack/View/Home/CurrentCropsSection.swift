@@ -1,0 +1,53 @@
+//
+//  CurrentCropsSection.swift
+//  AgroHack
+//
+//  Created by Gustavo Souto Pereira on 04/12/25.
+//
+
+import SwiftUI
+
+struct Crop: Identifiable {
+    let id = UUID()
+    let name: String
+    let imageName: String
+}
+
+struct CurrentCropsSection: View {
+    
+    let crops = [
+        Crop(name: "Trigo", imageName: "trigo"),
+        Crop(name: "Café", imageName: "cafe"),
+        Crop(name: "Milho", imageName: "milho"),
+        Crop(name: "Pimenta", imageName: "pimenta")
+    ]
+    
+    // Layout de Grid com duas colunas flexíveis
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Plantações Atuais")
+                    .font(.headline)
+                Spacer()
+                Text("Ver todas")
+                    .font(.subheadline)
+            }
+            .padding(.top)
+
+            LazyVGrid(columns: columns, spacing: 15) {
+                ForEach(crops) { crop in
+                    CropCardView(crop: crop)
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    CurrentCropsSection()
+}

@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct AgroHackApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(for: PlantModel.self)
         }
     }
 }

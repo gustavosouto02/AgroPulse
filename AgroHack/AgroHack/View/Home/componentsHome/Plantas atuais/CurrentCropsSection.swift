@@ -6,28 +6,17 @@
 //
 
 import SwiftUI
-
-struct Crop: Identifiable {
-    let id = UUID()
-    let name: String
-    let imageName: String
-}
+import SwiftData
 
 struct CurrentCropsSection: View {
-    
-    let crops = [
-        Crop(name: "Trigo", imageName: "trigo"),
-        Crop(name: "Café", imageName: "cafe"),
-        Crop(name: "Milho", imageName: "milho"),
-        Crop(name: "Pimenta", imageName: "pimenta")
-    ]
-    
-    // Layout de Grid com duas colunas flexíveis
+
+    @Query(sort: \PlantModel.name) var plants: [PlantModel]
+
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -40,13 +29,16 @@ struct CurrentCropsSection: View {
             .padding(.top)
 
             LazyVGrid(columns: columns, spacing: 15) {
-                ForEach(crops) { crop in
-                    CropCardView(crop: crop)
+                ForEach(plants) { plant in
+                    NavigationLink(value: plant) {
+                        CropCardView(plant: plant)
+                    }
                 }
             }
         }
     }
 }
+
 
 #Preview {
     CurrentCropsSection()

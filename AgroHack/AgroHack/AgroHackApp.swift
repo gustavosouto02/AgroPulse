@@ -12,6 +12,7 @@ struct AgroHackApp: App {
     var body: some Scene {
         WindowGroup {
             AddPlantView()
+//            ContentView()
         }
     }
 }

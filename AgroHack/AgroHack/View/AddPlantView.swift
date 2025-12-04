@@ -10,21 +10,23 @@ import SwiftUI
 import PhotosUI
 
 struct AddPlantView: View {
+    @StateObject var viewModel = ControlMLViewModel()
     @State private var name = ""
     @State private var selectedPhoto: PhotosPickerItem? = nil
-    @State private var selectedImageData: Data? = nil
+//    @State private var selectedImageData: Data? = nil
     var body: some View {
         Form{
             Section{
                 HStack{
                     Spacer()
                     
-                        if let data = selectedImageData, let image = UIImage(data: data) {
+                    if let data = viewModel.selectedImageData, let image = UIImage(data: data) {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 150, height: 150)
                                 .clipShape(Circle())
+                        
                         } else {
                             PhotoComponent()
                         }
@@ -39,14 +41,33 @@ struct AddPlantView: View {
                     }
                     Spacer()
                 }
+                VStack{
+                    Menu("Vegetais"){
+                        Button("Tomate", action:{
+                            viewModel.vegetable = .tomato
+                            viewModel.selectModel(selectedVegetable: .tomato)
+                        })
+                        Button("milho", action:{
+                            viewModel.vegetable = .corn
+                            viewModel.selectModel(selectedVegetable: .corn)
+                        })
+                        Button("soja", action:{
+                            viewModel.vegetable = .soybean
+                            viewModel.selectModel(selectedVegetable: .soybean)
+                        })
+                    }
+                    Text("Vegetal: \(viewModel.vegetable)")
+                    Text("Resultado: \(viewModel.classificationLabel)")
+                }
             }
 
         }
         .onChange(of: selectedPhoto) {
             Task {
                 if let data = try? await selectedPhoto?.loadTransferable(type: Data.self) {
-                    selectedImageData = data
+                    viewModel.selectedImageData = data
                 }
+                
             }
         }
     }

@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CC91CFCB2EE13BEF0059C4CB /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC91CFCA2EE13BEF0059C4CB /* UIImage+Extension.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		63CAA62E2EDFE85C00E962FE /* AgroHack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgroHack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC91CFCA2EE13BEF0059C4CB /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		63CAA6252EDFE85C00E962FE = {
 			isa = PBXGroup;
 			children = (
+				CC91CFCA2EE13BEF0059C4CB /* UIImage+Extension.swift */,
 				63CAA6302EDFE85C00E962FE /* AgroHack */,
 				63CAA62F2EDFE85C00E962FE /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC91CFCB2EE13BEF0059C4CB /* UIImage+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,7 +260,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4649B2Z4DA;
+				DEVELOPMENT_TEAM = 2XBHGB4LG5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -286,7 +293,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4649B2Z4DA;
+				DEVELOPMENT_TEAM = 2XBHGB4LG5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

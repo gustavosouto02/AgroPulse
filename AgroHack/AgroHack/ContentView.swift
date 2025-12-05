@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var chatVm = ChatBotViewModel()
     var body: some View {
             TabView {
                 // 1. Aba Principal (HomeView)
@@ -15,6 +16,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Início", systemImage: "house.fill")
                     }
+                    .environmentObject(chatVm)
                 
                 // 2. Outras Abas (Placeholders)
                 Text("Agenda")
@@ -22,10 +24,11 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-                ChatBotView(chatVm: ChatBotViewModel())
+                ChatBotView()
                     .tabItem {
                         Label("IA de foto", systemImage: "message")
                     }
+                    .environmentObject(chatVm)
                 
                 Text("Transporte")
                     .tabItem {

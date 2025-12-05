@@ -13,6 +13,7 @@ struct HomeView: View {
     // Altura do Header (ajuste conforme o layout)
     //let headerHeight: CGFloat = 260
     @Environment(\.modelContext) private var context
+    @EnvironmentObject var chatVm: ChatBotViewModel
 
     var body: some View {
         NavigationStack {
@@ -45,6 +46,7 @@ struct HomeView: View {
                 .navigationDestination(for: PlantModel.self) { plant in
                     PlantDetailView(plant: plant)
                 }
+                .environmentObject(chatVm)
 
                 // FAB
                 FloatingAddButton()

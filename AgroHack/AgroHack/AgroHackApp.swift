@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct AgroHackApp: App {
@@ -13,8 +14,8 @@ struct AgroHackApp: App {
     @StateObject private var appState = AppState()
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-            ChatBotView(chatVm: chatVm)
+            ContentView()
+                .modelContainer(for: PlantModel.self)
         }
     }
 }

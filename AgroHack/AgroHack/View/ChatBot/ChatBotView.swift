@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChatBotView: View {
 
-    @ObservedObject var chatVm: ChatBotViewModel
+    @EnvironmentObject var chatVm: ChatBotViewModel
    
 
     var body: some View {

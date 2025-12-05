@@ -8,36 +8,49 @@
 import SwiftUI
 
 struct CareSection: View {
-
+    
     let plant: PlantModel
-
+    
+    @State private var ultimaRega: Date
+    @State private var ultimaAdubacao: Date
+    @State private var ultimaPraga: Date
+    @State private var ultimoTratamento: Date
+    
+    init(plant: PlantModel) {
+        self.plant = plant
+        _ultimaRega = State(initialValue: plant.ultimaRega ?? Date())
+        _ultimaAdubacao = State(initialValue: plant.ultimaAdubacao ?? Date())
+        _ultimaPraga = State(initialValue: plant.ultimaPraga ?? Date())
+        _ultimoTratamento = State(initialValue: plant.ultimoTratamento ?? Date())
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Manejo e Cuidados")
                 .font(.headline)
-
+            
             info(
                 icon: "drop.fill",
                 title: "Última rega",
-                value: format(plant.ultimaRega)
+                date: $ultimaRega
             )
-
+            
             info(
                 icon: "apple.meditate.circle.fill",
                 title: "Última adubação",
-                value: format(plant.ultimaAdubacao)
+                date: $ultimaAdubacao
             )
-
+            
             info(
                 icon: "allergens.fill",
                 title: "Última praga",
-                value: format(plant.ultimaPraga)
+                date: $ultimaPraga
             )
-
+            
             info(
                 icon: "cross.vial.fill",
                 title: "Tratamento",
-                value: format(plant.ultimoTratamento)
+                date: $ultimoTratamento
             )
         }
         .padding()
@@ -46,8 +59,8 @@ struct CareSection: View {
         .shadow(radius: 3)
         .padding(.horizontal)
     }
-
-    func info(icon: String, title: String, value: String) -> some View {
+    
+    func info(icon: String, title: String, date: Binding<Date>) -> some View {
         HStack {
             Image(systemName: icon)
                 .resizable()
@@ -56,40 +69,14 @@ struct CareSection: View {
                 .foregroundColor(.green)
             Text(title)
             Spacer()
-            Text(value)
-                .foregroundColor(.gray)
+            DatePicker("", selection: date, displayedComponents: .date)
+                .datePickerStyle(.compact)
+                .labelsHidden()
+                .environment(\.locale, Locale(identifier: "pt_BR"))
+                .frame(width: 140, alignment: .trailing)
+                //.padding(.horizontal)
         }
     }
-
-    func format(_ date: Date?) -> String {
-        guard let date = date else { return "—" }
-
-        let calendar = Calendar.current
-
-        // 1. Hoje
-        if calendar.isDateInToday(date) {
-            return "Hoje"
-        }
-
-        // 2. Ontem
-        if calendar.isDateInYesterday(date) {
-            return "Ontem"
-        }
-
-        // 3. Últimos 7 dias → relative string
-        if let days = calendar.dateComponents([.day], from: date, to: Date()).day,
-           days < 7 {
-            let formatter = RelativeDateTimeFormatter()
-            formatter.unitsStyle = .short
-            formatter.locale = Locale(identifier: "pt_BR")
-            return formatter.localizedString(for: date, relativeTo: Date())
-        }
-
-        // 4. Caso contrário → dd/MM/yyyy
-        let df = DateFormatter()
-        df.locale = Locale(identifier: "pt_BR")
-        df.dateFormat = "dd/MM/yyyy"
-        return df.string(from: date)
-    }
-
 }
+
+

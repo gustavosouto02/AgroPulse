@@ -9,131 +9,261 @@ import SwiftUI
 struct ChatBotView: View {
 
     @EnvironmentObject var chatVm: ChatBotViewModel
+    @Environment(\.dismiss) private var dismiss
     var plant: PlantModel?
         
     var body: some View {
-
-        VStack {
-
-            // ------------------------
-            // HEADER CUSTOMIZADO (mantido)
-            // ------------------------
-            if let plant = plant {
-                HStack(spacing: 12) {
-                    if let data = plant.image,
-                       let uiImage = UIImage(data: data) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: "leaf.circle.fill")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundColor(.green)
+        ZStack(alignment: .top) {
+            // Background
+            Color(.systemBackground)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Header customizado
+                ChatHeaderView(
+                    plantName: plant?.name ?? "Chat da colheita",
+                    showBackButton: plant != nil,
+                    onBack: { dismiss() }
+                )
+                
+                // Planta info (se houver)
+                if let plant = plant {
+                    PlantInfoBar(plant: plant)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                }
+                
+                // Área do chat
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(chatVm.messages) { message in
+                                ChatBubbleView(message: message)
+                                    .id(message.id)
+                            }
+                            
+                            // Indicador de carregamento
+                            if chatVm.isLoading {
+                                TypingIndicatorView()
+                                    .id("typingIndicator")
+                            }
+                            
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(height: 1)
+                                .id("bottomAnchor")
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 16)
+                        .padding(.bottom, 8)
                     }
-                    
-                    Text(plant.name)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.black)
+                    .scrollDismissesKeyboard(.interactively)
+                    .onChange(of: chatVm.messages.count) { _ in
+                        withAnimation {
+                            proxy.scrollTo("bottomAnchor", anchor: .bottom)
+                        }
+                    }
+                    .onChange(of: chatVm.isLoading) { isLoading in
+                        if isLoading {
+                            withAnimation {
+                                proxy.scrollTo("typingIndicator", anchor: .bottom)
+                            }
+                        }
+                    }
+                }
+                
+                // Input area
+                ChatInputView(chatVm: chatVm)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 8)
+            }
+        }
+        .navigationBarHidden(true)
+    }
+}
+
+// MARK: - Header Component
+struct ChatHeaderView: View {
+    let plantName: String
+    let showBackButton: Bool
+    let onBack: () -> Void
+    
+    var body: some View {
+        ZStack {
+            // Background verde
+            Color("colorPrimal")
+                .ignoresSafeArea(edges: .top)
+            
+            VStack(spacing: 0) {
+                Spacer()
+                    .frame(height: 50)
+                
+                HStack {
+                    if showBackButton {
+                        Button(action: onBack) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 16, weight: .semibold))
+                                Text("Detalhes")
+                                    .font(.system(size: 16))
+                            }
+                            .foregroundStyle(.white)
+                        }
+                    } else {
+                        Spacer()
+                    }
                     
                     Spacer()
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 16)
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
-
-                Divider()
-                    .background(Color(.colorPrimal))
-                
-            } else {
-                VStack(alignment: .leading, spacing: 0) {
+                    
                     Text("Chat da colheita")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(Color.colorPrimal)
-                }
-                .padding(.horizontal)
-                .padding(.top, 20)
-                .padding(.bottom, 10)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            // ------------------------
-            // ÁREA DO CHAT
-            // ------------------------
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(spacing: 8) {
-                        ForEach(chatVm.messages) { message in
-                            ChatBubbleView(message: message)
-                                .id(message.id)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(.white)
+                    
+                    Spacer()
+                    
+                    if showBackButton {
+                        // Espaço para manter o título centralizado quando há botão
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 16, weight: .semibold))
+                            Text("Detalhes")
+                                .font(.system(size: 16))
                         }
-
-                        Rectangle()
-                            .fill(Color.clear)
-                            .frame(height: 1)
-                            .id("bottomAnchor")
+                        .opacity(0)
+                    } else {
+                        Spacer()
                     }
-                    .padding(.top, 10)
-                    .frame(maxWidth: .infinity)
                 }
-                .cornerRadius(20)
-                .shadow(color: .black.opacity(0.05), radius: 5, y: 5)
-                .scrollDismissesKeyboard(.interactively)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 12)
             }
-
-            ChatInputView(chatVm: chatVm)
         }
-        .padding(.horizontal)
-        .padding(.bottom, 8)
-        .background(Color(.systemBackground))
-        .navigationBarHidden(false)
-        .navigationBarTitleDisplayMode(.inline)
+        .frame(height: 100)
+    }
+}
 
-        // ------------------------
-        // TÍTULO DA BARRA (ATIVO AO MESMO TEMPO)
-        // ------------------------
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(plant?.name ?? "Chat da colheita")
-                    .font(.headline)
+// MARK: - Plant Info Bar
+struct PlantInfoBar: View {
+    let plant: PlantModel
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            if let data = plant.image,
+               let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+            } else {
+                Image(systemName: "leaf.circle.fill")
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(Color("colorPrimal"))
+            }
+            
+            Text(plant.name)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.primary)
+            
+            Spacer()
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.systemGray6))
+        )
+    }
+}
+
+// MARK: - Chat Bubble
+struct ChatBubbleView: View {
+    let message: Message
+    
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            if message.isUser {
+                Spacer(minLength: 50)
+                
+                Text(message.text)
+                    .font(.system(size: 16))
+                    .foregroundColor(.black)
+                    .lineSpacing(3)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 14)
+                    .background(
+                        UnevenRoundedRectangle(
+                            topLeadingRadius: 20,
+                            bottomLeadingRadius: 20,
+                            bottomTrailingRadius: 4,
+                            topTrailingRadius: 20,
+                            style: .continuous
+                        )
+                        .fill(Color("colorPrimal").opacity(0.2))
+                    )
+            } else {
+                Text(.init(message.text))
+                    .font(.system(size: 16))
+                    .foregroundColor(.black)
+                    .lineSpacing(3)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 14)
+                    .background(
+                        UnevenRoundedRectangle(
+                            topLeadingRadius: 20,
+                            bottomLeadingRadius: 4,
+                            bottomTrailingRadius: 20,
+                            topTrailingRadius: 20,
+                            style: .continuous
+                        )
+                        .fill(Color(.systemGray5))
+                    )
+                
+                Spacer(minLength: 50)
             }
         }
     }
+}
 
-    struct ChatBubbleView: View {
-        let message: Message
-
-        var body: some View {
-            HStack {
-                if !message.isUser {
-
-                    Text(.init(message.text))
-                        .font(.body)
-                        .padding(12)
-                        .background(Color.colorTertiary)
-                        .foregroundColor(.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .frame(maxWidth: 320, alignment: .leading)
-
-                    Spacer()
-
-                } else {
-                    Spacer()
-
-                    Text(message.text)
-                        .font(.body)
-                        .padding(12)
-                        .background(Color.colorSecondary)
-                        .foregroundColor(.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .frame(maxWidth: 320, alignment: .trailing)
+// MARK: - Typing Indicator
+struct TypingIndicatorView: View {
+    @State private var animatingDots = false
+    
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            HStack(spacing: 6) {
+                ForEach(0..<3) { index in
+                    Circle()
+                        .fill(Color.gray.opacity(0.6))
+                        .frame(width: 8, height: 8)
+                        .scaleEffect(animatingDots ? 1.2 : 0.6)
+                        .opacity(animatingDots ? 1.0 : 0.4)
+                        .animation(
+                            Animation.easeInOut(duration: 0.6)
+                                .repeatForever()
+                                .delay(Double(index) * 0.2),
+                            value: animatingDots
+                        )
                 }
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 2)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .background(
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 20,
+                    bottomLeadingRadius: 4,
+                    bottomTrailingRadius: 20,
+                    topTrailingRadius: 20,
+                    style: .continuous
+                )
+                .fill(Color(.systemGray5))
+            )
+            
+            Spacer(minLength: 50)
+        }
+        .onAppear {
+            animatingDots = true
         }
     }
 }

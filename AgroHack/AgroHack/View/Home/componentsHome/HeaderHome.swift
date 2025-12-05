@@ -27,9 +27,7 @@ struct HeaderHome: View {
                 
                 Spacer()
                 
-                Button {
-                    // Ação de Notificação
-                } label: {
+                NavigationLink(destination: NotificationView()) {
                     ZStack {
                         Circle()
                             .fill(.ultraThinMaterial)

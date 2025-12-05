@@ -25,11 +25,16 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-                ChatBotView(plant: nil)
-                    .tabItem {
-                        Label("IA de foto", systemImage: "message")
-                    }
-                    .environmentObject(chatVm)
+                NavigationStack {
+                     ChatBotView(plant: nil)
+                 }
+                 .tabItem {
+                     // Mantive "message" conforme seu snippet, mas "camera.fill" também seria comum
+                     Label("IA de foto", systemImage: "message")
+                 }
+                 .environmentObject(chatVm)
+               // ChatBotView(plant: nil)
+                    
                 
                 Text("Transporte")
                     .tabItem {

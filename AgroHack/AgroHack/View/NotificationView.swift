@@ -30,12 +30,6 @@ struct NotificationView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Header customizado
-                    HeaderNotification(onBack: {
-                        dismiss()
-                    })
-                    .padding(.bottom, 20)
-                    
                     // Lista de notificações
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 24) {
@@ -60,46 +54,28 @@ struct NotificationView: View {
                     }
                 }
             }
-            .navigationBarHidden(true)
+            .navigationTitle("Notificações")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationBarBackButtonHidden(true)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button(action: {
+                                    dismiss()
+                                }) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(.white)
+                                        .padding(8)
+                                }
+                            }
+                        }
+                        
+                        // Configuração da Barra de Navegação Colorida
+                        .toolbarBackground(Color("colorPrimal"), for: .navigationBar)
+                        .toolbarBackground(.visible, for: .navigationBar)
+                        .toolbarColorScheme(.dark, for: .navigationBar)
         }
-    }
-}
 
-// MARK: - Header Component
-struct HeaderNotification: View {
-    let onBack: () -> Void
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Button(action: onBack) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
-                        Text("Início")
-                            .font(.system(size: 16))
-                    }
-                    .foregroundStyle(.primary)
-                }
-                
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 50)
-            .padding(.bottom, 10)
-            
-            // Título
-            HStack {
-                Text("Notificações")
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(.primary)
-                
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 10)
-        }
-        .background(Color("colorSecondary").opacity(0.05))
     }
 }
 

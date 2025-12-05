@@ -87,7 +87,9 @@ struct HomeView: View {
                 irrigacao: plant.irrigacao,
                 dataGerminacao: now.addingTimeInterval(-86400 * 40),  // 40 dias atrás
                 dataColheita: now.addingTimeInterval(86400 * 20),      // 20 dias no futuro
-                ultimaRega: now.addingTimeInterval(-86400 * 1),       // 1 dia atrás
+                tipoPraga: "Pulga",
+                ultimaRega: now.addingTimeInterval(-86400 * 1),
+                       // 1 dia atrás
                 ultimaAdubacao: now.addingTimeInterval(-86400 * 15),  // 15 dias atrás
                 ultimaPraga: now.addingTimeInterval(-86400 * 30),     // 30 dias atrás
                 ultimoTratamento: now.addingTimeInterval(-86400 * 10) // 10 dias atrás

@@ -22,6 +22,8 @@ class PlantModel: Identifiable {
     var irrigacao: String
     var dataGerminacao: Date?
     var dataColheita: Date?
+    var tempoCicloDeVida: Date?
+    var tipoPraga: String
     
     // NOVAS DATAS
     var ultimaRega: Date?
@@ -29,7 +31,7 @@ class PlantModel: Identifiable {
     var ultimaPraga: Date?
     var ultimoTratamento: Date?
     
-    init(id: UUID, name: String, image: Data? = nil, cultura: String, solo: String, clima: String, area: String, estagio: String, fertilizantes: String, irrigacao: String, dataGerminacao: Date? = nil, dataColheita: Date? = nil, ultimaRega: Date? = nil, ultimaAdubacao: Date? = nil, ultimaPraga: Date? = nil, ultimoTratamento: Date? = nil) {
+    init(id: UUID, name: String, image: Data? = nil, cultura: String, solo: String, clima: String, area: String, estagio: String, fertilizantes: String, irrigacao: String, dataGerminacao: Date? = nil, dataColheita: Date? = nil,tempoCicloDeVida: Date? = nil,tipoPraga: String ,ultimaRega: Date? = nil, ultimaAdubacao: Date? = nil, ultimaPraga: Date? = nil, ultimoTratamento: Date? = nil) {
         self.id = id
         self.name = name
         self.image = image
@@ -40,7 +42,7 @@ class PlantModel: Identifiable {
         self.estagio = estagio
         self.fertilizantes = fertilizantes
         self.irrigacao = irrigacao
-
+        self.tipoPraga = tipoPraga
         self.dataGerminacao = dataGerminacao
         self.dataColheita = dataColheita
         self.ultimaRega = ultimaRega

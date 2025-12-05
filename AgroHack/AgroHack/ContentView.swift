@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     @StateObject var chatVm = ChatBotViewModel()
     
     var body: some View {

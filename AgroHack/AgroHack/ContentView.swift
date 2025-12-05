@@ -25,6 +25,7 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
+                // mudar pra reconhecer doença
                 NavigationStack {
                      ChatBotView(plant: nil)
                  }

@@ -16,7 +16,8 @@ protocol ManagerChatProtocol {
 final class ManagerChat: ManagerChatProtocol {
     private let model = GenerativeModel(
         name: "gemini-2.5-flash",
-        apiKey: "AIzaSyBERNCHx_f_Oes-67PMtiXn_ZaEktJxfQU"
+        apiKey: "AIzaSyDka8BowwJQAx-1bJU-oVzgV1UthjvNoXI"
+//        apiKey: "AIzaSyBERNCHx_f_Oes-67PMtiXn_ZaEktJxfQU"
     )
     private var chat: Chat?
 

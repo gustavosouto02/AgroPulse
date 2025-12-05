@@ -2,8 +2,6 @@
 //  ChatBotView.swift
 //  AgroHack
 //
-//  Created by Filipi Romão on 04/12/25.
-//
 
 import GoogleGenerativeAI
 import SwiftUI
@@ -11,25 +9,60 @@ import SwiftUI
 struct ChatBotView: View {
 
     @EnvironmentObject var chatVm: ChatBotViewModel
-   
-
+    var plant: PlantModel?
+        
     var body: some View {
-        // 1. A VStack agora é a view principal (não está mais dentro de um ZStack)
-        VStack(spacing: 15) {
-            
-            // 2. Header (sem alteração)
-            VStack(alignment: .leading, spacing: 0) {
-                Text("Chat da colheita")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(Color.colorPrimal)
 
+        VStack {
+
+            // ------------------------
+            // HEADER CUSTOMIZADO (mantido)
+            // ------------------------
+            if let plant = plant {
+                HStack(spacing: 12) {
+                    if let data = plant.image,
+                       let uiImage = UIImage(data: data) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "leaf.circle.fill")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .foregroundColor(.green)
+                    }
+                    
+                    Text(plant.name)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.black)
+                    
+                    Spacer()
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 16)
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+
+                Divider()
+                    .background(Color(.colorPrimal))
+                
+            } else {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Chat da colheita")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(Color.colorPrimal)
+                }
+                .padding(.horizontal)
+                .padding(.top, 20)
+                .padding(.bottom, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .foregroundStyle(Color.colorPrimal)
-            .padding(.top, 32)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            
 
-            // 3. Área do Chat (ScrollViewReader)
+            // ------------------------
+            // ÁREA DO CHAT
+            // ------------------------
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(spacing: 8) {
@@ -37,34 +70,37 @@ struct ChatBotView: View {
                             ChatBubbleView(message: message)
                                 .id(message.id)
                         }
-                        Rectangle().fill(Color.clear).frame(
-                            height: 1
-                        ).id("bottomAnchor")
+
+                        Rectangle()
+                            .fill(Color.clear)
+                            .frame(height: 1)
+                            .id("bottomAnchor")
                     }
                     .padding(.top, 10)
                     .frame(maxWidth: .infinity)
                 }
                 .cornerRadius(20)
                 .shadow(color: .black.opacity(0.05), radius: 5, y: 5)
-                .frame(
-                    alignment: .top
-                )
-                .frame(maxWidth: .infinity)
                 .scrollDismissesKeyboard(.interactively)
-
-
             }
+
             ChatInputView(chatVm: chatVm)
-
-
         }
         .padding(.horizontal)
         .padding(.bottom, 8)
         .background(Color(.systemBackground))
-        
-        
-    
-        
+        .navigationBarHidden(false)
+        .navigationBarTitleDisplayMode(.inline)
+
+        // ------------------------
+        // TÍTULO DA BARRA (ATIVO AO MESMO TEMPO)
+        // ------------------------
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(plant?.name ?? "Chat da colheita")
+                    .font(.headline)
+            }
+        }
     }
 
     struct ChatBubbleView: View {
@@ -79,19 +115,12 @@ struct ChatBotView: View {
                         .padding(12)
                         .background(Color.colorTertiary)
                         .foregroundColor(.black)
-                        .clipShape(
-                            RoundedRectangle(
-                                cornerRadius: 15,
-                                style: .continuous
-                            )
-                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
                         .frame(maxWidth: 320, alignment: .leading)
-                        .multilineTextAlignment(.leading)
 
                     Spacer()
 
                 } else {
-
                     Spacer()
 
                     Text(message.text)
@@ -99,23 +128,12 @@ struct ChatBotView: View {
                         .padding(12)
                         .background(Color.colorSecondary)
                         .foregroundColor(.black)
-                        .clipShape(
-                            RoundedRectangle(
-                                cornerRadius: 15,
-                                style: .continuous
-                            )
-                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
                         .frame(maxWidth: 320, alignment: .trailing)
-                        .multilineTextAlignment(.trailing)
-
                 }
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 2)
         }
-        
-    
     }
-        
 }
-

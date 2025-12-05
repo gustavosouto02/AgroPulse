@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var chatVm = ChatBotViewModel()
+    
     var body: some View {
             TabView {
                 // 1. Aba Principal (HomeView)
@@ -24,7 +25,7 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-                ChatBotView()
+                ChatBotView(plant: nil)
                     .tabItem {
                         Label("IA de foto", systemImage: "message")
                     }

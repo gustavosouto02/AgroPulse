@@ -31,7 +31,7 @@ struct ChatInputView: View {
                         .font(.system(size: 20))
                 }
                 .padding(12)
-                .background(Color.blue)
+                .background(Color(.colorPrimal))
                 .foregroundColor(.white)
                 .clipShape(Circle())
                 .disabled(chatVm.userPrompt.isEmpty)

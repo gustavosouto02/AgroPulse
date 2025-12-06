@@ -49,13 +49,27 @@ struct HelpView: View {
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(for: HelpCategory.self) { category in
-                            if category.name == "Solo" {
+                        
+                        // Gerencia os destinos
+                        .navigationDestination(for: HelpCategory.self) { category in
+                            switch category.name {
+                            case "Solo":
                                 ColorTestView()
-                                    // Ao entrar na próxima tela, você pode querer mostrar a barra nativa novamente:
-                                    .toolbar(.visible, for: .navigationBar)
-                            } else {
-                                Text("Funcionalidade para \(category.name) em breve...")
+                                    .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
+                                
+                            case "Folhas":
+                                DiseaseAnalysisView()
+                                    .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
+                                
+                            default:
+                                // Placeholder para as outras
+                                VStack {
+                                    Text("Funcionalidade: \(category.name)")
+                                        .font(.title)
+                                    Text("Em breve...")
+                                        .foregroundColor(.gray)
+                                }
+                                .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
                             }
                         }
         }

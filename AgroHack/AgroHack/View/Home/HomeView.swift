@@ -62,11 +62,11 @@ struct HomeView: View {
         
         print("🌱 Inserindo plantações iniciais no SwiftData…")
 
-        let predefinedPlants: [(name: String, asset: String, cultura: String, solo: String, clima: String, area: String, estagio: String, fertilizantes: String, irrigacao: String)] = [
-            ("Trigo", "trigo", "Cereal", "Areno-argiloso", "Temperado", "2 hectares", "Crescimento", "NPK 04-14-08", "Moderada"),
-            ("Café", "cafe", "Grão", "Argiloso", "Tropical", "1 hectare", "Germinação", "Composto orgânico", "Regular"),
-            ("Milho", "milho", "Cereal", "Areno-argiloso", "Subtropical", "3 hectares", "Floração", "NPK 20-05-20", "Alta"),
-            ("Pimenta", "pimenta", "Hortaliça", "Leve e drenado", "Quente", "0.5 hectare", "Colheita", "Adubo orgânico", "Moderada")
+        let predefinedPlants: [(name: String, asset: String, cultura: String, solo: String, clima: String, area: String, estagio: StepsGrowthType, fertilizantes: String, irrigacao: String)] = [
+            ("Trigo", "trigo", "Cereal", "Areno-argiloso", "Temperado", "2 hectares", .Crescimento, "NPK 04-14-08", "Moderada"),
+            ("Café", "cafe", "Grão", "Argiloso", "Tropical", "1 hectare", .Inicial, "Composto orgânico", "Regular"),
+            ("Milho", "milho", "Cereal", "Areno-argiloso", "Subtropical", "3 hectares", .Floracao, "NPK 20-05-20", "Alta"),
+            ("Pimenta", "pimenta", "Hortaliça", "Leve e drenado", "Quente", "0.5 hectare", .Colheita, "Adubo orgânico", "Moderada")
         ]
         
         for plant in predefinedPlants {

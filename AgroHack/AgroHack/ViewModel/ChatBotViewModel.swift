@@ -35,7 +35,7 @@ class ChatBotViewModel: ObservableObject {
             solo: plantModel?.solo ?? "",
             clima: plantModel?.clima ?? "",
             area: plantModel?.area ?? "",
-            estagio: plantModel?.estagio ?? "",
+            estagio: plantModel?.estagio ?? .Inicial,
             fertilizantes: plantModel?.fertilizantes ?? "",
             irrigacao: plantModel?.irrigacao ?? "",
             tipoPraga: plantModel?.tipoPraga ?? ""

@@ -39,7 +39,7 @@ struct PlantDetailView: View {
                     .padding(.horizontal)
 
                 // Ciclo de Vida
-                LifeCycleSection(estagio: plant.estagio)
+                LifeCycleSection(plant: plant)
 
                 // Manejo e Cuidados
                 CareSection(plant: plant)

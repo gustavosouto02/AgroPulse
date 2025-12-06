@@ -89,7 +89,7 @@ extension PlantInfo {
             solo: "não informado",
             clima: "não informado",
             area: "não informada",
-            estagio: "não informado",
+            estagio: StepsGrowthType.Inicial,
             fertilizantes: "não informado",
             irrigacao: "não informado",
             tipoPraga: "não informado"

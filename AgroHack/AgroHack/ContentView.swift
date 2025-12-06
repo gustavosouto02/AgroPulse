@@ -19,8 +19,8 @@ struct ContentView: View {
                     }
                     
                 
-                // 2. Outras Abas (Placeholders)
-                Text("Agenda")
+                // 2. Agenda
+                AgendaView()
                     .tabItem {
                         Label("Agenda", systemImage: "calendar")
                     }

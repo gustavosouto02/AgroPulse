@@ -44,14 +44,6 @@ struct PlantDetailView: View {
                 // Manejo e Cuidados
                 CareSection(plant: plant)
 
-//                NavigationLink(destination: ChatBotView()) {
-//                    Text("Chat sobre essa colheita")
-//                        .frame(maxWidth: .infinity)
-//                        .padding()
-//                        .background(Color("colorPrimal"))
-//                        .foregroundColor(.white)
-//                        .cornerRadius(16)
-//                }
                 NavigationLink(destination: ChatBotView(plant: plant)) {
                     HStack {
                         Text("Falar com IA sobre \(plant.name)")

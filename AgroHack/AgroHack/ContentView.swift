@@ -11,33 +11,34 @@ struct ContentView: View {
     
     
     var body: some View {
-            TabView {
-                // 1. Aba Principal (HomeView)
-                HomeView()
-                    .tabItem {
-                        Label("Início", systemImage: "house.fill")
-                    }
-                    
-                
-                // 2. Outras Abas (Placeholders)
-                Text("Agenda")
-                    .tabItem {
-                        Label("Agenda", systemImage: "calendar")
-                    }
-                
-//                ChatBotView(plant: nil)
+//            TabView {
+//                // 1. Aba Principal (HomeView)
+//                HomeView()
 //                    .tabItem {
-//                        Label("IA de foto", systemImage: "message")
+//                        Label("Início", systemImage: "house.fill")
 //                    }
-                   
-                
-                Text("Transporte")
-                    .tabItem {
-                        Label("Transporte", systemImage: "truck.box.fill")
-                    }
-            }
-            .tint(Color("colorPrimal")) // Cor dos ícones ativos na TabView
-            .preferredColorScheme(.light)
+//                    
+//                
+//                // 2. Outras Abas (Placeholders)
+//                Text("Agenda")
+//                    .tabItem {
+//                        Label("Agenda", systemImage: "calendar")
+//                    }
+//                
+////                ChatBotView(plant: nil)
+////                    .tabItem {
+////                        Label("IA de foto", systemImage: "message")
+////                    }
+//                   
+//                
+//                Text("Transporte")
+//                    .tabItem {
+//                        Label("Transporte", systemImage: "truck.box.fill")
+//                    }
+//            }
+//            .tint(Color("colorPrimal")) // Cor dos ícones ativos na TabView
+//            .preferredColorScheme(.light)
+        SearchBestSeasonView()
         }
     }
 

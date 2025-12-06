@@ -1,8 +1,11 @@
 import SwiftUI
+import SwiftData
 import Vision
 
 
 struct ColorTestView: View {
+    
+    @Environment(\.modelContext) var modelContext
 
     @State private var image: UIImage?
     @State private var showCamera = false
@@ -14,7 +17,8 @@ struct ColorTestView: View {
     @State private var correctedSoil: CalibrationRGB?
 
     @State private var statusMessage: String = "Selecione uma imagem ou tire uma foto"
-
+    @State var classificationAD: String = ""
+    
     private let visionService = VisionService()
     private let colorService = ColorService()
 
@@ -166,7 +170,7 @@ struct ColorTestView: View {
                                 }
                                 
                 if let corrected = self.correctedSoil {
-                    if let result = self.colorService.classifySoilML(rgb: corrected) {
+                    if let result = self.colorService.classifySoilML(rgb: corrected, modelContext: modelContext) {
                         let soloName = result.solo
                         let confidence = result.probabilities[soloName] ?? 0.0
                         self.statusMessage = "Solo: \(soloName)\nConfiança: \(String(format: "%.2f", confidence * 100))%"

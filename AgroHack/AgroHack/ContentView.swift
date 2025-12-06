@@ -11,6 +11,7 @@ struct ContentView: View {
     
     
     var body: some View {
+
             TabView {
                 // 1. Aba Principal (HomeView)
                 HomeView()
@@ -38,6 +39,7 @@ struct ContentView: View {
             }
             .tint(Color("colorPrimal")) // Cor dos ícones ativos na TabView
             .preferredColorScheme(.light)
+
         }
     }
 

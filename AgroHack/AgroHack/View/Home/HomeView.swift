@@ -12,6 +12,7 @@ struct HomeView: View {
 
     // Altura do Header (ajuste conforme o layout)
     //let headerHeight: CGFloat = 260
+    @Query(sort: \PlantModel.name) var plants: [PlantModel]
     @Environment(\.modelContext) private var context
     @EnvironmentObject var chatVm: ChatBotViewModel
 
@@ -33,7 +34,7 @@ struct HomeView: View {
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal)
                             .padding(.top, -100)
-
+                        Text("Quantidade de plantas: \(plants.count)")
                         // Plantações Atuais
                         CurrentCropsSection()
                             .padding()
@@ -46,7 +47,7 @@ struct HomeView: View {
                 .navigationDestination(for: PlantModel.self) { plant in
                     PlantDetailView(plant: plant)
                 }
-                .environmentObject(chatVm)
+            
 
                 // FAB
                 FloatingAddButton()

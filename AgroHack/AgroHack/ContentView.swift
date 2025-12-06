@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var chatVm = ChatBotViewModel()
     
     var body: some View {
             TabView {
@@ -18,7 +17,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Início", systemImage: "house.fill")
                     }
-                    .environmentObject(chatVm)
+                    
                 
                 // 2. Outras Abas (Placeholders)
                 Text("Agenda")
@@ -26,11 +25,11 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-                ChatBotView(plant: nil)
-                    .tabItem {
-                        Label("IA de foto", systemImage: "message")
-                    }
-                    .environmentObject(chatVm)
+//                ChatBotView(plant: nil)
+//                    .tabItem {
+//                        Label("IA de foto", systemImage: "message")
+//                    }
+                   
                 
                 Text("Transporte")
                     .tabItem {
@@ -41,5 +40,6 @@ struct ContentView: View {
             .preferredColorScheme(.light)
         }
     }
+
 
 

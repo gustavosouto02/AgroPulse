@@ -3,6 +3,7 @@ import SwiftUI
 
 struct AddPlantView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
     @StateObject var addPlantViewModel = AddPlantViewModel()
     @StateObject var viewModel = ControlMLViewModel()
     @State private var selectedPhoto: PhotosPickerItem? = nil
@@ -10,12 +11,6 @@ struct AddPlantView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-
-                // MARK: - Título
-                Text("Nova plantação")
-                    .font(.title2.bold())
-                    .padding(.horizontal)
-
                 // MARK: - Foto
                 VStack(spacing: 16) {
                     ZStack {
@@ -51,7 +46,7 @@ struct AddPlantView: View {
                             .foregroundColor(.blue)
                     }
                 }
-                .padding(.horizontal)
+                .padding()
 
                 // MARK: - Card Nome & Cultura
 
@@ -223,6 +218,27 @@ struct AddPlantView: View {
                 }
             }
         }
+        .navigationTitle("Nova plantação")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(8)
+                }
+            }
+        }
+        
+        // Configuração da Barra de Navegação Colorida
+        .toolbarBackground(Color("colorPrimal"), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        
     }
 }
 

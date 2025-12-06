@@ -46,6 +46,11 @@ struct HomeView: View {
                 .navigationDestination(for: PlantModel.self) { plant in
                     PlantDetailView(plant: plant)
                 }
+                .navigationDestination(for: String.self) { value in
+                    if value == "NotificationView" {
+                        NotificationView()
+                    }
+                }
             
 
                 // FAB

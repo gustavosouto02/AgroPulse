@@ -22,60 +22,58 @@ struct NotificationView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .top) {
-                // Background
-                Color("colorSecondary")
-                    .opacity(0.1)
-                    .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    // Lista de notificações
-                    ScrollView(.vertical, showsIndicators: false) {
-                        VStack(alignment: .leading, spacing: 24) {
-                            ForEach(groupedNotifications, id: \.period.title) { group in
-                                VStack(alignment: .leading, spacing: 12) {
-                                    // Título da seção
-                                    Text(group.period.title)
-                                        .font(.title3)
-                                        .bold()
-                                        .foregroundStyle(.primary)
+        ZStack(alignment: .top) {
+            // Background
+            Color("colorSecondary")
+                .opacity(0.1)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Lista de notificações
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ForEach(groupedNotifications, id: \.period.title) { group in
+                            VStack(alignment: .leading, spacing: 12) {
+                                // Título da seção
+                                Text(group.period.title)
+                                    .font(.title3)
+                                    .bold()
+                                    .foregroundStyle(.primary)
+                                    .padding(.horizontal, 20)
+                                
+                                // Notificações da seção
+                                ForEach(group.notifications) { notification in
+                                    NotificationCard(notification: notification)
                                         .padding(.horizontal, 20)
-                                    
-                                    // Notificações da seção
-                                    ForEach(group.notifications) { notification in
-                                        NotificationCard(notification: notification)
-                                            .padding(.horizontal, 20)
-                                    }
                                 }
                             }
                         }
-                        .padding(.vertical, 10)
                     }
+                    .padding(.vertical, 10)
                 }
             }
-            .navigationTitle("Notificações")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationBarBackButtonHidden(true)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarLeading) {
-                                Button(action: {
-                                    dismiss()
-                                }) {
-                                    Image(systemName: "chevron.left")
-                                        .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(.white)
-                                        .padding(8)
-                                }
-                            }
-                        }
-                        
-                        // Configuração da Barra de Navegação Colorida
-                        .toolbarBackground(Color("colorPrimal"), for: .navigationBar)
-                        .toolbarBackground(.visible, for: .navigationBar)
-                        .toolbarColorScheme(.dark, for: .navigationBar)
         }
-
+        .navigationTitle("Notificações")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(8)
+                }
+            }
+        }
+        
+        // Configuração da Barra de Navegação Colorida
+        .toolbarBackground(Color("colorPrimal"), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        
     }
 }
 

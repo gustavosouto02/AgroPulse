@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HelpView: View {
+    @Environment(\.dismiss) private var dismiss
     let helpCategories: [HelpCategory] = [
         HelpCategory(name: "Solo", imageName: "solo"),
         HelpCategory(name: "Folhas", imageName: "folhas"),
@@ -21,25 +22,42 @@ struct HelpView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                // Background
+            ZStack{
                 Color(.systemGray6)
-                    .ignoresSafeArea()
-                
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 24) {
-                        // Header
-                        HeaderHelpView()
-                            .padding(.horizontal, 20)
-                            .padding(.top, 16)
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    HStack {
                         
-                        // Grid de categorias
-                        HelpCategoriesGrid(categories: helpCategories)
-                            .padding(.horizontal, 20)
-                            .padding(.bottom, 20)
+                        Spacer()
+                    }
+                    .frame(height: 10) 
+                    .background(Color("colorPrimal"))
+                    
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 24) {
+                            // Header
+                            HeaderHelpView()
+                                .padding(.horizontal, 20)
+                                .padding(.top, 16)
+                            
+                            // Grid de categorias
+                            HelpCategoriesGrid(categories: helpCategories)
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 20)
+                        }
                     }
                 }
             }
+            .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(for: HelpCategory.self) { category in
+                            if category.name == "Solo" {
+                                ColorTestView()
+                                    // Ao entrar na próxima tela, você pode querer mostrar a barra nativa novamente:
+                                    .toolbar(.visible, for: .navigationBar)
+                            } else {
+                                Text("Funcionalidade para \(category.name) em breve...")
+                            }
+                        }
         }
     }
 }
@@ -62,10 +80,19 @@ struct HeaderHelpView: View {
 }
 
 // MARK: - Help Category Model
-struct HelpCategory: Identifiable {
+struct HelpCategory: Identifiable, Hashable { // <--- Adicione Hashable aqui
     let id = UUID()
     let name: String
     let imageName: String
+    
+    // Implementação do Hashable (opcional se todos os props forem Hashable, mas boa prática)
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: HelpCategory, rhs: HelpCategory) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 // MARK: - Categories Grid
@@ -91,9 +118,8 @@ struct HelpCategoryCard: View {
     let category: HelpCategory
     
     var body: some View {
-        Button(action: {
-            // Caminho vazio por enquanto
-        }) {
+        // Mudamos de Button para NavigationLink
+        NavigationLink(value: category) {
             VStack(spacing: 16) {
                 // Imagem
                 Image(category.imageName)
@@ -113,7 +139,7 @@ struct HelpCategoryCard: View {
             .cornerRadius(16)
             .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(PlainButtonStyle()) // Mantém o visual original sem ficar azul
     }
 }
 

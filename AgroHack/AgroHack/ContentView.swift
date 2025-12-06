@@ -25,11 +25,6 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-//                ChatBotView(plant: nil)
-//                    .tabItem {
-//                        Label("IA de foto", systemImage: "message")
-//                    }
-                
                 // 3. Ajuda
                 HelpView()
                     .tabItem {

@@ -37,58 +37,70 @@ struct AgendaView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 24) {
-                        // Header
-                        HeaderAgendaView()
-                            .padding(.horizontal, 20)
-                            .padding(.top, 8)
+                Color(.systemGray6)
+                    .edgesIgnoringSafeArea(.all)
+                VStack{
+                    HStack {
                         
-                        // Próximos afazeres
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text("Próximos afazeres")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.primary)
+                        Spacer()
+                    }
+                    .frame(height: 10)
+                    .background(Color("colorPrimal"))
+                    
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 24) {
+                            // Header
+                            HeaderAgendaView()
                                 .padding(.horizontal, 20)
+                                .padding(.top, 8)
                             
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 16) {
-                                    ForEach(tasks) { task in
-                                        TaskCardView(task: task)
+                            // Próximos afazeres
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Próximos afazeres")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 20)
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 16) {
+                                        ForEach(tasks) { task in
+                                            TaskCardView(task: task)
+                                        }
                                     }
+                                    .padding(.horizontal, 20)
                                 }
+                            }
+                            
+                            // Calendário
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Calendário")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 20)
+                                
+                                CalendarView(
+                                    selectedDate: $selectedDate,
+                                    calendarEvents: calendarEvents
+                                )
                                 .padding(.horizontal, 20)
                             }
+                            .padding(.bottom, 100)
                         }
-                        
-                        // Calendário
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text("Calendário")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.primary)
-                                .padding(.horizontal, 20)
-                            
-                            CalendarView(
-                                selectedDate: $selectedDate,
-                                calendarEvents: calendarEvents
-                            )
-                            .padding(.horizontal, 20)
-                        }
-                        .padding(.bottom, 100)
                     }
+                    //.background(Color(.systemGray6))
                 }
-                .background(Color(.systemGray6))
                 
                 // FAB
                 FloatingActionButton()
                     .padding(.trailing, 20)
                     .padding(.bottom, 20)
             }
+            .toolbar(.hidden, for: .navigationBar)
         }
         .onAppear {
             calendarEvents = CalendarEvent.generateEventsForMonth(selectedDate)
         }
-        .onChange(of: selectedDate) { newDate in
+        .onChange(of: selectedDate) {_, newDate in
             calendarEvents = CalendarEvent.generateEventsForMonth(newDate)
         }
     }

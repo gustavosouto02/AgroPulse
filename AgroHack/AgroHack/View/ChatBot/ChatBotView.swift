@@ -59,12 +59,12 @@ struct ChatBotView: View {
                     .padding(.bottom, 8)
                 }
                 .scrollDismissesKeyboard(.interactively)
-                .onChange(of: chatVm.messages.count) { _ in
+                .onChange(of: chatVm.messages.count) {_, _ in
                     withAnimation {
                         proxy.scrollTo("bottomAnchor", anchor: .bottom)
                     }
                 }
-                .onChange(of: chatVm.isLoading) { isLoading in
+                .onChange(of: chatVm.isLoading) {_, isLoading in
                     if isLoading {
                         withAnimation {
                             proxy.scrollTo("typingIndicator", anchor: .bottom)

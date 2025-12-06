@@ -15,7 +15,7 @@ class AddPlantViewModel: ObservableObject {
     @Published var cultura: String = ""
     @Published var solo: String = ""
     @Published var area: String = ""
-    @Published var estagio: String = ""
+    @Published var estagio: StepsGrowthType = .Inicial
     @Published var fertlizantes: String = ""
     @Published var irrigacao: String = ""
     @Published var clima: String = ""

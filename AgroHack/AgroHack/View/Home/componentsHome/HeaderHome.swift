@@ -5,6 +5,13 @@
 //  Created by Gustavo Souto Pereira on 04/12/25.
 //
 
+//
+//  HeaderHome.swift
+//  AgroHack
+//
+//  Created by Gustavo Souto Pereira on 04/12/25.
+//
+
 import SwiftUI
 
 struct HeaderHome: View {
@@ -27,9 +34,8 @@ struct HeaderHome: View {
                 
                 Spacer()
                 
-                Button {
-                    // Ação de Notificação
-                } label: {
+                // MUDANÇA AQUI: Usamos 'value' com uma String em vez de 'destination'
+                NavigationLink(value: "NotificationView") {
                     ZStack {
                         Circle()
                             .fill(.ultraThinMaterial)

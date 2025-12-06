@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct GrowthProgressView: View {
-    let steps: [String]              // nomes dos estágios
-    let dates: [String?]             // datas opcionais (card usa vazio)
-    let current: String              // estágio atual
+    let steps: [StepsGrowthType]      // nomes dos estágios
+    /*let dates: [String?]  */           // datas opcionais (card usa vazio)
+    let current: StepsGrowthType              // estágio atual
 
     var body: some View {
         let currentIndex = steps.firstIndex(of: current) ?? 0
@@ -20,14 +20,14 @@ struct GrowthProgressView: View {
                 VStack(spacing: 10) {
 
                     // --- Data (só aparece se existir) ---
-                    if let date = dates[index], !date.isEmpty {
-                        Text(date)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .frame(height: 18)
-                    } else {
-                        Spacer().frame(height: 18)
-                    }
+//                    if let date = dates[index], !date.isEmpty {
+//                        Text(date)
+//                            .font(.caption)
+//                            .foregroundColor(.gray)
+//                            .frame(height: 18)
+//                    } else {
+//                        Spacer().frame(height: 18)
+//                    }
 
                     // --- Linha + Bolinha ---
                     ZStack {
@@ -43,7 +43,7 @@ struct GrowthProgressView: View {
                     .frame(height: 24)
 
                     // --- Nome ---
-                    Text(steps[index])
+                    Text("\(steps[index])")
                         .font(.caption)
                         .multilineTextAlignment(.center)
                         .frame(height: 28)
@@ -65,8 +65,8 @@ struct GrowthProgressView: View {
 }
 
 struct GrowthProgressMiniView: View {
-    let steps: [String]
-    let current: String
+    let steps: [StepsGrowthType]
+    let current: StepsGrowthType
 
     var body: some View {
         let currentIndex = steps.firstIndex(of: current) ?? 0

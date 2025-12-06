@@ -5,8 +5,8 @@
 //  Created by Filipi Romão on 04/12/25.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 struct Message: Identifiable, Equatable {
     let id = UUID()
@@ -19,11 +19,29 @@ class ChatBotViewModel: ObservableObject {
     @Published var userPrompt: String = ""
     @Published var messages: [Message] = []
     @Published var isLoading: Bool = false
-    
+
     private let manager: ManagerChatProtocol
-    
-    init(manager: ManagerChatProtocol = ManagerChat()) {
-        self.manager = manager
+
+    var plantModel: PlantModel?
+
+    init(plantModel: PlantModel?) {
+        self.plantModel = plantModel
+
+        // transforma PlantModel em PlantInfo
+        let plant = PlantModel(
+            id: UUID(),
+            name: plantModel?.name ?? "",
+            cultura: plantModel?.cultura ?? "",
+            solo: plantModel?.solo ?? "",
+            clima: plantModel?.clima ?? "",
+            area: plantModel?.area ?? "",
+            estagio: plantModel?.estagio ?? .Inicial,
+            fertilizantes: plantModel?.fertilizantes ?? "",
+            irrigacao: plantModel?.irrigacao ?? "",
+            tipoPraga: plantModel?.tipoPraga ?? ""
+        )
+
+        self.manager = ManagerChat(plantModel: plant)
     }
 
     private func addAIMessage(_ text: String) {
@@ -37,13 +55,13 @@ class ChatBotViewModel: ObservableObject {
     func sendResponse() {
         Task {
             guard !userPrompt.isEmpty else { return }
-            
+
             let userText = userPrompt
             addUserMessage(userText)
             userPrompt = ""
 
             isLoading = true
-            
+
             do {
                 let result = try await manager.sendMessage(userText)
                 addAIMessage(result)
@@ -55,4 +73,3 @@ class ChatBotViewModel: ObservableObject {
         }
     }
 }
-

@@ -31,9 +31,8 @@ struct CropCardView: View {
                 Text(plant.name)
                     .font(.headline)
 
-                // 🔥 Linha de progresso com o mesmo padrão do LifeCycleSection
                 GrowthProgressMiniView(
-                    steps: ["Germinação", "Crescimento", "Floração", "Colheita"],
+                    steps: StepsGrowthType.allCases,
                     current: plant.estagio
                 )
             }
@@ -50,18 +49,16 @@ struct CropCardView: View {
 
 struct FloatingAddButton: View {
     var body: some View {
-        Button {
-            // Ação: Abrir tela para adicionar nova plantação
-            print("Adicionar nova plantação")
-        } label: {
+        NavigationLink(destination: AddPlantView(), label: {
             Image(systemName: "plus.circle.fill")
                 .resizable()
                 .frame(width: 60, height: 60) // Tamanho maior para um FAB
                 .foregroundColor(Color("colorPrimal"))
                 .background(Color.white) // Fundo branco para destaque, se necessário
                 .clipShape(Circle())
-                .shadow(radius: 5) // Sombra para dar o efeito flutuante
-        }
+                .shadow(radius: 5) //
+        })
+
     }
 }
 

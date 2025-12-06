@@ -8,75 +8,76 @@
 import SwiftUI
 
 struct CareSection: View {
-    
-    let plant: PlantModel
-    
-    @State private var ultimaRega: Date
-    @State private var ultimaAdubacao: Date
-    @State private var ultimaPraga: Date
-    @State private var ultimoTratamento: Date
-    
-    init(plant: PlantModel) {
-        self.plant = plant
-        _ultimaRega = State(initialValue: plant.ultimaRega ?? Date())
-        _ultimaAdubacao = State(initialValue: plant.ultimaAdubacao ?? Date())
-        _ultimaPraga = State(initialValue: plant.ultimaPraga ?? Date())
-        _ultimoTratamento = State(initialValue: plant.ultimoTratamento ?? Date())
-    }
-    
+    @Bindable var plant: PlantModel
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Manejo e Cuidados")
                 .font(.headline)
-            
-            info(
+
+            CareRow(
                 icon: "drop.fill",
-                title: "Última rega",
-                date: $ultimaRega
+                color: .blue,
+                label: "Última rega",
+                date: Binding(get: { plant.ultimaRega ?? Date() }, set: { plant.ultimaRega = $0 })
             )
-            
-            info(
+
+            CareRow(
                 icon: "apple.meditate.circle.fill",
-                title: "Última adubação",
-                date: $ultimaAdubacao
+                color: .brown,
+                label: "Última adubação",
+                date: Binding(get: { plant.ultimaAdubacao ?? Date() }, set: { plant.ultimaAdubacao = $0 })
             )
-            
-            info(
+
+            CareRow(
                 icon: "allergens.fill",
-                title: "Última praga",
-                date: $ultimaPraga
+                color: .green,
+                label: "Última praga",
+                date: Binding(get: { plant.ultimaPraga ?? Date() }, set: { plant.ultimaPraga = $0 })
             )
-            
-            info(
+
+            CareRow(
                 icon: "cross.vial.fill",
-                title: "Tratamento",
-                date: $ultimoTratamento
+                color: .blue,
+                label: "Último tratamento",
+                date: Binding(get: { plant.ultimoTratamento ?? Date() }, set: { plant.ultimoTratamento = $0 })
             )
         }
         .padding()
-        .background(.white)
+        .background(Color.white)
         .cornerRadius(12)
         .shadow(radius: 3)
         .padding(.horizontal)
+        .environment(\.locale, Locale(identifier: "pt_BR"))
     }
-    
-    func info(icon: String, title: String, date: Binding<Date>) -> some View {
+}
+
+// MARK: - Subview Reutilizável
+struct CareRow: View {
+    var icon: String
+    var color: Color
+    var label: String
+    @Binding var date: Date
+
+    var body: some View {
         HStack {
             Image(systemName: icon)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 20, height: 20)
-                .foregroundColor(.green)
-            Text(title)
+                .foregroundColor(color)
+            
+            Text(label)
+                .font(.body)
+                .lineLimit(1)
+            
             Spacer()
-            DatePicker("", selection: date, displayedComponents: .date)
+            
+            DatePicker("", selection: $date, displayedComponents: .date)
                 .datePickerStyle(.compact)
                 .labelsHidden()
-                .environment(\.locale, Locale(identifier: "pt_BR"))
-                .frame(width: 140, alignment: .trailing)
-                //.padding(.horizontal)
+                .scaleEffect(0.9)
+                .padding(.trailing, -8)
         }
     }
 }
-
-

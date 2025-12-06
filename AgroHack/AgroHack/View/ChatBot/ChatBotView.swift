@@ -7,7 +7,7 @@ import GoogleGenerativeAI
 import SwiftUI
 
 struct ChatBotView: View {
-    
+
     @EnvironmentObject var chatVm: ChatBotViewModel
     @Environment(\.dismiss) private var dismiss
     var plant: PlantModel?
@@ -34,6 +34,7 @@ struct ChatBotView: View {
             }
             
             // Área do chat
+
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(spacing: 12) {
@@ -102,6 +103,7 @@ struct ChatBotView: View {
                 }
             }
         }
+        
     }
     
     // MARK: - Header Component

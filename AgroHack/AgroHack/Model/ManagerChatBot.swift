@@ -17,35 +17,46 @@ final class ManagerChat: ManagerChatProtocol {
     private let model = GenerativeModel(
         name: "gemini-2.5-flash",
         apiKey: "AIzaSyDka8BowwJQAx-1bJU-oVzgV1UthjvNoXI"
-//        apiKey: "AIzaSyBERNCHx_f_Oes-67PMtiXn_ZaEktJxfQU"
+            //        apiKey: "AIzaSyBERNCHx_f_Oes-67PMtiXn_ZaEktJxfQU"
     )
     private var chat: Chat?
 
-    var plantInfo: PlantInfo?
+    private var plantModel: PlantModel?
+
+    init(plantModel: PlantModel?) {
+        self.plantModel = plantModel
+    }
 
     private func ensureChat() throws {
         if chat == nil {
-            chat = model.startChat(history: [
-                try ModelContent(
-                    role: "user",
-                    parts: [
-                        "Descrição da plantação: \(PlantInfo(cultura: "trigo", solo: "arenoso", clima: "arido", area: "800 hectares", estagio: "inicial", fertilizantes: "nao uso", irrigacao: "a cada 2 semanas"))"
-                    ]
-                )
-            ])
+            if let plantModel {
+                chat = model.startChat(history: [
+                    try ModelContent(
+                        role: "user",
+                        parts: [
+                            "Descrição da plantação: nome:\(plantModel.name),tipo de solo: \(plantModel.solo), tipo de clima: \(plantModel.clima) ,estagio: \(plantModel.estagio), area: \(plantModel.area), fertilizante: \(plantModel.fertilizantes),praga que já teve: \(plantModel.tipoPraga), historico de irrigação: \(plantModel.irrigacao)"
+                        ]
+                    )
+                ])
+
+            }
         }
     }
 
     func startTraining(prompt: String) async throws -> String {
 
+        guard let plantModel else { return "Erro ao buscar model para o chat." }
+
         // cria o chat já com o histórico inicial
         chat = model.startChat(history: [
+
             try ModelContent(
                 role: "user",
                 parts: [
-                    "\(prompt)\nDescrição da plantação: \(PlantInfo(cultura: "trigo", solo: "arenoso", clima: "arido", area: "800 hectares", estagio: "inicial", fertilizantes: "nao uso", irrigacao: "a cada 2 semanas"))"
+                    "\(prompt)\nDescrição da plantação: nome:\(plantModel.name),tipo de solo: \(plantModel.solo), tipo de clima: \(plantModel.clima) ,estagio: \(plantModel.estagio), area: \(plantModel.area), fertilizante: \(plantModel.fertilizantes),praga que já teve: \(plantModel.tipoPraga), historico de irrigação: \(plantModel.irrigacao)"
                 ]
             )
+
         ])
 
         guard let chat else { return "Erro ao iniciar o chat." }
@@ -67,5 +78,21 @@ final class ManagerChat: ManagerChatProtocol {
         try ensureChat()
         let result = try await chat!.sendMessage(message)
         return result.text ?? "Erro ao gerar resposta."
+    }
+}
+extension PlantInfo {
+    static var empty: PlantModel {
+        PlantModel(
+            id: UUID(),
+            name: "não informado",
+            cultura: "não informada",
+            solo: "não informado",
+            clima: "não informado",
+            area: "não informada",
+            estagio: StepsGrowthType.Inicial,
+            fertilizantes: "não informado",
+            irrigacao: "não informado",
+            tipoPraga: "não informado"
+        )
     }
 }

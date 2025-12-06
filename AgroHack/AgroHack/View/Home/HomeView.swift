@@ -12,6 +12,7 @@ struct HomeView: View {
 
     // Altura do Header (ajuste conforme o layout)
     //let headerHeight: CGFloat = 260
+    @Query(sort: \PlantModel.name) var plants: [PlantModel]
     @Environment(\.modelContext) private var context
     @EnvironmentObject var chatVm: ChatBotViewModel
 
@@ -33,8 +34,7 @@ struct HomeView: View {
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal)
                             .padding(.top, -100)
-
-                        // Plantações Atuais
+        
                         CurrentCropsSection()
                             .padding()
                     }
@@ -46,7 +46,7 @@ struct HomeView: View {
                 .navigationDestination(for: PlantModel.self) { plant in
                     PlantDetailView(plant: plant)
                 }
-                .environmentObject(chatVm)
+            
 
                 // FAB
                 FloatingAddButton()
@@ -62,11 +62,11 @@ struct HomeView: View {
         
         print("🌱 Inserindo plantações iniciais no SwiftData…")
 
-        let predefinedPlants: [(name: String, asset: String, cultura: String, solo: String, clima: String, area: String, estagio: String, fertilizantes: String, irrigacao: String)] = [
-            ("Trigo", "trigo", "Cereal", "Areno-argiloso", "Temperado", "2 hectares", "Crescimento", "NPK 04-14-08", "Moderada"),
-            ("Café", "cafe", "Grão", "Argiloso", "Tropical", "1 hectare", "Germinação", "Composto orgânico", "Regular"),
-            ("Milho", "milho", "Cereal", "Areno-argiloso", "Subtropical", "3 hectares", "Floração", "NPK 20-05-20", "Alta"),
-            ("Pimenta", "pimenta", "Hortaliça", "Leve e drenado", "Quente", "0.5 hectare", "Colheita", "Adubo orgânico", "Moderada")
+        let predefinedPlants: [(name: String, asset: String, cultura: String, solo: String, clima: String, area: String, estagio: StepsGrowthType, fertilizantes: String, irrigacao: String)] = [
+            ("Trigo", "trigo", "Cereal", "Areno-argiloso", "Temperado", "2 hectares", .Crescimento, "NPK 04-14-08", "Moderada"),
+            ("Café", "cafe", "Grão", "Argiloso", "Tropical", "1 hectare", .Inicial, "Composto orgânico", "Regular"),
+            ("Milho", "milho", "Cereal", "Areno-argiloso", "Subtropical", "3 hectares", .Floracao, "NPK 20-05-20", "Alta"),
+            ("Pimenta", "pimenta", "Hortaliça", "Leve e drenado", "Quente", "0.5 hectare", .Colheita, "Adubo orgânico", "Moderada")
         ]
         
         for plant in predefinedPlants {
@@ -87,7 +87,9 @@ struct HomeView: View {
                 irrigacao: plant.irrigacao,
                 dataGerminacao: now.addingTimeInterval(-86400 * 40),  // 40 dias atrás
                 dataColheita: now.addingTimeInterval(86400 * 20),      // 20 dias no futuro
-                ultimaRega: now.addingTimeInterval(-86400 * 1),       // 1 dia atrás
+                tipoPraga: "Pulga",
+                ultimaRega: now.addingTimeInterval(-86400 * 1),
+                       // 1 dia atrás
                 ultimaAdubacao: now.addingTimeInterval(-86400 * 15),  // 15 dias atrás
                 ultimaPraga: now.addingTimeInterval(-86400 * 30),     // 30 dias atrás
                 ultimoTratamento: now.addingTimeInterval(-86400 * 10) // 10 dias atrás

@@ -8,11 +8,15 @@
 import Foundation
 
 struct PlantInfo {
-    let cultura: String
-    let solo: String
-    let clima: String
-    let area: String
-    let estagio: String
-    let fertilizantes: String
-    let irrigacao: String
+
+    var image: Data?
+    var cultura: String
+    var solo: String
+    var clima: String
+    var area: String
+    var estagio: String
+    var fertilizantes: String
+    var irrigacao: String
+    var dataGerminacao: Date?
+    var dataColheita: Date?
 }

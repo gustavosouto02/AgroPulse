@@ -9,17 +9,23 @@ import SwiftUI
 
 
 import SwiftUI
+import SwiftData
 
 struct LifeCycleSection: View {
     
-    let estagio: String
+    let plant: PlantModel
+    let stepsGrowthType = StepsGrowthType.allCases
     
-    let steps: [(name: String, date: String)] = [
-        ("Germinação", "12/04"),
-        ("Crescimento", ""),
-        ("Floração", ""),
-        ("Colheita", "25/05")
-    ]
+
+    
+//    let steps: [(name: StepsGrowthType, date: String)] = [
+//        ("Germinação", "12/04"),
+//        ("Crescimento", ""),
+//        ("Floração", ""),
+//        ("Colheita", "25/05")
+//    ]
+    
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -38,9 +44,9 @@ struct LifeCycleSection: View {
             
             // 🔥 Aqui você usa o componente reutilizável
             GrowthProgressView(
-                steps: steps.map { $0.name },
-                dates: steps.map { $0.date },
-                current: estagio
+                steps: stepsGrowthType,
+//                dates: plant.dataGerminacao..<plant.dataColheita,
+                current: plant.estagio
             )
             .padding(.vertical, 10)
             

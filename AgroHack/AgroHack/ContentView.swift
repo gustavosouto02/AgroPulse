@@ -29,8 +29,14 @@ struct ContentView: View {
 //                    .tabItem {
 //                        Label("IA de foto", systemImage: "message")
 //                    }
-                   
                 
+                // 3. Ajuda
+                HelpView()
+                    .tabItem {
+                        Label("Ajuda", systemImage: "questionmark.circle")
+                    }
+                   
+                // 4. Transporte
                 Text("Transporte")
                     .tabItem {
                         Label("Transporte", systemImage: "truck.box.fill")

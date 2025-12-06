@@ -20,18 +20,19 @@ struct ContentView: View {
                     }
                     
                 
-                // 2. Outras Abas (Placeholders)
-                Text("Agenda")
+                // 2. Agenda
+                AgendaView()
                     .tabItem {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-                ColorTestView()
+                // 3. Ajuda
+                HelpView()
                     .tabItem {
-                        Label("IA de foto", systemImage: "message")
+                        Label("Ajuda", systemImage: "questionmark.circle")
                     }
                    
-                
+                // 4. Transporte
                 Text("Transporte")
                     .tabItem {
                         Label("Transporte", systemImage: "truck.box.fill")

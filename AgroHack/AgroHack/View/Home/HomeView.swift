@@ -34,8 +34,7 @@ struct HomeView: View {
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal)
                             .padding(.top, -100)
-                        Text("Quantidade de plantas: \(plants.count)")
-                        // Plantações Atuais
+        
                         CurrentCropsSection()
                             .padding()
                     }

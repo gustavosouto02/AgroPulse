@@ -9,36 +9,86 @@ import SwiftUI
 
 struct CareSection: View {
 
-    let plant: PlantModel
+    @Bindable var plant: PlantModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Manejo e Cuidados")
                 .font(.headline)
 
-            info(
-                icon: "drop.fill",
-                title: "Última rega",
-                value: format(plant.ultimaRega)
-            )
 
-            info(
-                icon: "apple.meditate.circle.fill",
-                title: "Última adubação",
-                value: format(plant.ultimaAdubacao)
-            )
-
-            info(
-                icon: "allergens.fill",
-                title: "Última praga",
-                value: format(plant.ultimaPraga)
-            )
-
-            info(
-                icon: "cross.vial.fill",
-                title: "Tratamento",
-                value: format(plant.ultimoTratamento)
-            )
+            HStack {
+                Image(systemName: "drop.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.green)
+                Text("Última rega")
+                Spacer()
+                DatePicker(
+                    "",
+                    selection: Binding(
+                        get: { plant.ultimaRega ?? Date() },
+                        set: { plant.ultimaRega = $0 }
+                    ),
+                    displayedComponents: .date
+                )
+            }
+            
+            HStack {
+                Image(systemName: "apple.meditate.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.green)
+                Text("Última adubação")
+                Spacer()
+                DatePicker(
+                    "",
+                    selection: Binding(
+                        get: { plant.ultimaAdubacao ?? Date() },
+                        set: { plant.ultimaAdubacao = $0 }
+                    ),
+                    displayedComponents: .date
+                )
+            }
+            
+            HStack {
+                Image(systemName: "allergens.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.green)
+                Text("Última praga")
+                Spacer()
+                DatePicker(
+                    "",
+                    selection: Binding(
+                        get: { plant.ultimaPraga ?? Date() },
+                        set: { plant.ultimaPraga = $0 }
+                    ),
+                    displayedComponents: .date
+                )
+            }
+            
+            HStack {
+                Image(systemName: "cross.vial.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.green)
+                Text("Última praga")
+                Spacer()
+                DatePicker(
+                    "",
+                    selection: Binding(
+                        get: { plant.ultimoTratamento ?? Date() },
+                        set: { plant.ultimoTratamento = $0 }
+                    ),
+                    displayedComponents: .date
+                )
+            }
+            
         }
         .padding()
         .background(.white)
@@ -47,19 +97,19 @@ struct CareSection: View {
         .padding(.horizontal)
     }
 
-    func info(icon: String, title: String, value: String) -> some View {
-        HStack {
-            Image(systemName: icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
-                .foregroundColor(.green)
-            Text(title)
-            Spacer()
-            Text(value)
-                .foregroundColor(.gray)
-        }
-    }
+//    func info(icon: String, title: String, value: String) -> some View {
+//        HStack {
+//            Image(systemName: icon)
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 20, height: 20)
+//                .foregroundColor(.green)
+//            Text(title)
+//            Spacer()
+//            Text(value)
+//                .foregroundColor(.gray)
+//        }
+//    }
 
     func format(_ date: Date?) -> String {
         guard let date = date else { return "—" }
@@ -77,8 +127,10 @@ struct CareSection: View {
         }
 
         // 3. Últimos 7 dias → relative string
-        if let days = calendar.dateComponents([.day], from: date, to: Date()).day,
-           days < 7 {
+        if let days = calendar.dateComponents([.day], from: date, to: Date())
+            .day,
+            days < 7
+        {
             let formatter = RelativeDateTimeFormatter()
             formatter.unitsStyle = .short
             formatter.locale = Locale(identifier: "pt_BR")

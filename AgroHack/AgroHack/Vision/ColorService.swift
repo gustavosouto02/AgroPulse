@@ -10,6 +10,7 @@ import UIKit
 import Vision
 import CoreImage
 import CoreML
+import SwiftData
 
 struct CalibrationRGB {
     var red: Int
@@ -18,6 +19,11 @@ struct CalibrationRGB {
 }
 
 class ColorService {
+    
+    var nomeSolo: String = ""
+    var tipoSolo: String = ""
+    var classificacaoAD: String = ""
+    let solo: EnumTiposSolo = .Latossolo
     
     private let mlModel: ClassificacaoSolosPorCor = {
         do {
@@ -103,7 +109,7 @@ class ColorService {
     }
     
     // MARK: - Classificação via Core ML
-    func classifySoilML(rgb: CalibrationRGB) -> (solo: String, probabilities: [String: Double])? {
+    func classifySoilML(rgb: CalibrationRGB, modelContext: ModelContext) -> (solo: String, probabilities: [String: Double])? {
         do {
             let input = ClassificacaoSolosPorCorInput(
                 R: Int64(rgb.red),
@@ -113,10 +119,31 @@ class ColorService {
             
             let prediction = try mlModel.prediction(input: input)
             
+            tipoSolo = prediction.Solo
+            switch solo{
+            case .Latossolo:
+                classificacaoAD = "AD1"
+            case .Litossolo:
+                classificacaoAD = "AD2"
+            case .TerraRoxa:
+                classificacaoAD = "AD4"
+            }
+            nomeSolo = prediction.Solo
+            saveModelSolo(modelContext: modelContext)
+            
             return (solo: prediction.Solo, probabilities: prediction.SoloProbability)
+            
         } catch {
             print("Erro na previsão ML: \(error)")
             return nil
         }
+    }
+    
+    func saveModelSolo(modelContext: ModelContext){
+        let solo = SoloModel(name: nomeSolo,typeSolo: tipoSolo, classificationAD: classificacaoAD)
+        modelContext.insert(solo)
+        print("Valores salvos: \(solo.name)")
+        try? modelContext.save()
+        print("Depois do salvos: \(solo.name)")
     }
 }

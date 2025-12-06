@@ -53,7 +53,6 @@ struct PlantDetailView: View {
                     .background(Color.colorPrimal)
                     .foregroundColor(.white)
                     .cornerRadius(16)
-                    .navigationBarHidden(true)
                 }
                 .padding(.horizontal)
                 .padding(.bottom)

@@ -22,7 +22,7 @@ struct CareSection: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(.green)
+                    .foregroundColor(.blue)
                 Text("Última rega")
                 Spacer()
                 DatePicker(
@@ -40,7 +40,7 @@ struct CareSection: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(.green)
+                    .foregroundColor(.brown)
                 Text("Última adubação")
                 Spacer()
                 DatePicker(
@@ -77,7 +77,7 @@ struct CareSection: View {
                     .scaledToFit()
                     .frame(width: 20, height: 20)
                     .foregroundColor(.green)
-                Text("Última praga")
+                Text("Último tratamento")
                 Spacer()
                 DatePicker(
                     "",

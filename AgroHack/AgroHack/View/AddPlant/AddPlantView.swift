@@ -121,11 +121,27 @@ struct AddPlantView: View {
                         placeholder: "Área plantada",
                         text: $addPlantViewModel.area
                     )
-                    iconField(
-                        icon: "chart.bar",
-                        placeholder: "Estágio atual",
-                        text: $addPlantViewModel.estagio
-                    )
+                    Menu{
+                        Button("Inicial"){
+                            addPlantViewModel.estagio = .Inicial
+                        }
+                        Button("Crescimento"){
+                            addPlantViewModel.estagio = .Crescimento
+                        }
+                        Button("Floracao"){
+                            addPlantViewModel.estagio = .Floracao
+                        }
+                        Button("Colheita"){
+                            addPlantViewModel.estagio = .Colheita
+                        }
+                    } label:{
+                        HStack{
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundColor(.gray)
+                            Text("Estágio atual")
+
+                        }
+                    }
 
                     // PRAGAS
                     Menu {

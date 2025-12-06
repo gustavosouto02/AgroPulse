@@ -19,6 +19,31 @@ struct ColorTestView: View {
     private let colorService = ColorService()
 
     private let referencePaper = CalibrationRGB(red: 255, green: 255, blue: 255)
+    
+    struct SoilStats {
+        let name: String
+        let mean: (r: Double, g: Double, b: Double)
+        let std: (r: Double, g: Double, b: Double)
+    }
+
+    let soilDataset: [SoilStats] = [
+        SoilStats(
+            name: "Latossolo",
+            mean: (160.29, 68.71, 41.14),
+            std: (41.93, 28.62, 25.49)
+        ),
+        SoilStats(
+            name: "Litossolo",
+            mean: (149.20, 116.00, 86.60),
+            std: (27.72, 23.57, 20.71)
+        ),
+        SoilStats(
+            name: "Terra Roxa",
+            mean: (93.60, 47.80, 74.00),
+            std: (33.38, 27.33, 30.09)
+        )
+    ]
+    
 
     var body: some View {
         ScrollView {
@@ -99,6 +124,8 @@ struct ColorTestView: View {
                         colorBox(title: "Corrigido", rgb: corrected)
                     }
                 }
+                
+              // Text("Calibração concluída! Solo classificado: \(soilClass))"
 
                 Text(statusMessage)
                     .font(.caption)
@@ -156,15 +183,105 @@ struct ColorTestView: View {
                         referencePaperRGB: referencePaper
                     )
                 }
-
+                
                 if self.correctedSoil != nil {
-                    self.statusMessage = "Calibração concluída!"
-                } else {
-                    self.statusMessage = "Falha ao calibrar."
-                }
+                                    // self.statusMessage = "Calibração concluída!" // Remover essa linha antiga
+                                } else {
+                                    self.statusMessage = "Falha ao calibrar."
+                                }
+                                
+                                // --- NOVA IMPLEMENTAÇÃO ---
+                                if let corrected = self.correctedSoil {
+                                    
+                                    // 1. Converter Int para Double para o cálculo estatístico
+                                    let inputRGB = (
+                                        r: Double(corrected.red),
+                                        g: Double(corrected.green),
+                                        b: Double(corrected.blue)
+                                    )
+                                    
+                                    // 2. Chamar o método estatístico (Z-Score / Mahalanobis)
+                                    let (soilName, score) = self.identifySoil(rgb: inputRGB, dataset: self.soilDataset)
+                                    
+                                    // 3. Interpretar a confiança baseada no Score (Desvios Padrão)
+                                    // Score < 1.0 = Muito próximo da média (Alta confiança)
+                                    // Score < 2.0 = Dentro de 2 desvios padrão (Média confiança)
+                                    // Score > 3.0 = Outlier (Baixa confiança)
+                                    let confidence: String
+                                    if score < 1.0 { confidence = "Alta" }
+                                    else if score < 2.5 { confidence = "Média" }
+                                    else { confidence = "Baixa" }
+                                    
+                                    // 4. Atualizar UI
+                                    self.statusMessage = "Solo: \(soilName)\nConfiança: \(confidence) (Score: \(String(format: "%.2f", score)))"
+                                }
+
+
+//                if self.correctedSoil != nil {
+//                    self.statusMessage = "Calibração concluída!"
+//                } else {
+//                    self.statusMessage = "Falha ao calibrar."
+//                }
+//                
+//                if let corrected = self.correctedSoil {
+//                    let soilClass = classifySoil(rgb: corrected)
+//                    self.statusMessage = "Calibração concluída! Solo classificado: \(soilClass)"
+//                }
             }
         }
     }
+    
+//    func weightedDistance(from rgb: CalibrationRGB, to soil: SoilStats) -> Double {
+//        let wR = 1 / soil.std.r
+//        let wG = 1 / soil.std.g
+//        let wB = 1 / soil.std.b
+//
+//        let dr = (Double(rgb.red) - soil.mean.r) * wR
+//        let dg = (Double(rgb.green) - soil.mean.g) * wG
+//        let db = (Double(rgb.blue) - soil.mean.b) * wB
+//
+//        return sqrt(dr*dr + dg*dg + db*db)
+//    }
+//    
+//    func classifySoil(rgb: CalibrationRGB) -> String {
+//        // Ordena pelo menor distância
+//        let sorted = soilDataset.sorted { weightedDistance(from: rgb, to: $0) < weightedDistance(from: rgb, to: $1) }
+//        
+//        // Pega os 3 mais próximos
+//        let top3 = sorted.prefix(3)
+//        
+//        // Conta os votos
+//        var counts: [String: Int] = [:]
+//        for soil in top3 {
+//            counts[soil.name, default: 0] += 1
+//        }
+//        
+//        // Retorna o mais votado
+//        return counts.max(by: { $0.value < $1.value })?.key ?? "Desconhecido"
+//    }
+
+    func identifySoil(rgb: (r: Double, g: Double, b: Double), dataset: [SoilStats]) -> (String, Double) {
+        var bestMatch: String = "Desconhecido"
+        var lowestScore: Double = Double.infinity
+
+        for soil in dataset {
+            // Calcula o Z-Score para cada canal (distância normalizada pelo desvio padrão)
+            let zR = pow((rgb.r - soil.mean.r) / soil.std.r, 2)
+            let zG = pow((rgb.g - soil.mean.g) / soil.std.g, 2)
+            let zB = pow((rgb.b - soil.mean.b) / soil.std.b, 2)
+            
+            // Distância de Mahalanobis simplificada (assumindo canais independentes)
+            let score = sqrt(zR + zG + zB)
+            
+            if score < lowestScore {
+                lowestScore = score
+                bestMatch = soil.name
+            }
+        }
+        
+        return (bestMatch, lowestScore)
+    }
+    
 
     // =========================================================================
     // MARK: - UI Helper

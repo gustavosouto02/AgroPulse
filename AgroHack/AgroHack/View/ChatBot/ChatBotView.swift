@@ -8,9 +8,13 @@ import SwiftUI
 
 struct ChatBotView: View {
 
-    @EnvironmentObject var chatVm: ChatBotViewModel
-    var plant: PlantModel?
-        
+    let plant: PlantModel
+    @StateObject private var chatVm: ChatBotViewModel
+
+    init(plant: PlantModel) {
+        self.plant = plant
+        _chatVm = StateObject(wrappedValue: ChatBotViewModel(plantModel: plant))
+    }
     var body: some View {
 
         VStack {
@@ -18,47 +22,48 @@ struct ChatBotView: View {
             // ------------------------
             // HEADER CUSTOMIZADO (mantido)
             // ------------------------
-            if let plant = plant {
-                HStack(spacing: 12) {
-                    if let data = plant.image,
-                       let uiImage = UIImage(data: data) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: "leaf.circle.fill")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundColor(.green)
-                    }
-                    
-                    Text(plant.name)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.black)
-                    
-                    Spacer()
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 16)
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
 
-                Divider()
-                    .background(Color(.colorPrimal))
-                
-            } else {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Chat da colheita")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(Color.colorPrimal)
+            HStack(spacing: 12) {
+                if let data = plant.image,
+                    let uiImage = UIImage(data: data)
+                {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "leaf.circle.fill")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.green)
                 }
-                .padding(.horizontal)
-                .padding(.top, 20)
-                .padding(.bottom, 10)
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text(plant.name)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.black)
+
+                Spacer()
             }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 16)
+            .background(Color(.systemGray6))
+            .cornerRadius(12)
+
+            Divider()
+                .background(Color(.colorPrimal))
+
+            //            } else {
+            //                VStack(alignment: .leading, spacing: 0) {
+            //                    Text("Chat da colheita")
+            //                        .font(.system(size: 32, weight: .bold))
+            //                        .foregroundColor(Color.colorPrimal)
+            //                }
+            //                .padding(.horizontal)
+            //                .padding(.top, 20)
+            //                .padding(.bottom, 10)
+            //                .frame(maxWidth: .infinity, alignment: .leading)
+            //            }
 
             // ------------------------
             // ÁREA DO CHAT
@@ -97,10 +102,11 @@ struct ChatBotView: View {
         // ------------------------
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(plant?.name ?? "Chat da colheita")
+                Text(plant.name ?? "Chat da colheita")
                     .font(.headline)
             }
         }
+        
     }
 
     struct ChatBubbleView: View {

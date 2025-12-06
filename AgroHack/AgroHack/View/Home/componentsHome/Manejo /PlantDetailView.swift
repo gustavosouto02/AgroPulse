@@ -52,7 +52,7 @@ struct PlantDetailView: View {
 //                        .foregroundColor(.white)
 //                        .cornerRadius(16)
 //                }
-                NavigationLink(destination: ChatBotView(plant: plant).environmentObject(chatVm)) {
+                NavigationLink(destination: ChatBotView(plant: plant)) {
                     HStack {
                         Text("Falar com IA sobre \(plant.name)")
                     }
@@ -63,7 +63,6 @@ struct PlantDetailView: View {
                     .cornerRadius(16)
                     .navigationBarHidden(true)
                 }
-                .environmentObject(chatVm)
                 .padding(.horizontal)
                 .padding(.bottom)
             }

@@ -189,7 +189,7 @@ struct AddPlantView: View {
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color("PrimaryGreen"))
+                        .background(Color("colorPrimal"))
                         .cornerRadius(30)
                         .padding(.horizontal)
                 }

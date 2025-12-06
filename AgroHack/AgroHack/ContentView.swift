@@ -25,10 +25,10 @@ struct ContentView: View {
                         Label("Agenda", systemImage: "calendar")
                     }
                 
-//                ChatBotView(plant: nil)
-//                    .tabItem {
-//                        Label("IA de foto", systemImage: "message")
-//                    }
+                ColorTestView()
+                    .tabItem {
+                        Label("IA de foto", systemImage: "message")
+                    }
                    
                 
                 Text("Transporte")

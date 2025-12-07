@@ -29,15 +29,36 @@ class AddPlantViewModel: ObservableObject {
     @Published var temPraga:Bool = false
     @Published var usaFertilizante:Bool = false
 
-    func salvar(context: ModelContext) {
-        if let image{
-            let plant = PlantModel(id: UUID(), name: name,image: image ,cultura: cultura, solo: solo, clima: clima, area: area, estagio: estagio, fertilizantes: fertlizantes, irrigacao: irrigacao, tipoPraga: praga)
-            context.insert(plant)
-            print("Valores salvos: \(plant.name)")
-            try? context.save()
-            print("Valores salvos dps do bloco try?: \(plant.name)")
+    func salvar(context: ModelContext) throws { // 🚨 Adicionado 'throws' 🚨
+        if let image {
+            let plant = PlantModel(
+                id: UUID(),
+                name: name,
+                image: image,
+                cultura: cultura,
+                solo: solo,
+                clima: clima,
+                area: area,
+                estagio: estagio,
+                fertilizantes: fertlizantes,
+                irrigacao: irrigacao,
+                tipoPraga: praga
+            )
             
+            context.insert(plant)
+            
+            // 🚨 Remover '?' para que o erro seja propagado (thrown) 🚨
+            try context.save()
+            
+            print("✅ Planta salva no SwiftData: \(plant.name)")
+            
+        } else {
+            // Tratar o caso sem imagem, se for obrigatória
+            throw SavingError.missingImage
         }
-        
     }
+}
+enum SavingError: Error {
+    case missingImage
+    case genericSaveFailure
 }

@@ -78,6 +78,12 @@ struct ChatBotView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
         }
+        .onAppear {
+                if let plant = plant {
+                    // 🚨 3. Configure o chatVm com a planta específica no onAppear 🚨
+                    chatVm.configureChat(with: plant)
+                }
+            }
         .navigationTitle(plant?.name ?? "Chat da colheita")
         .navigationBarTitleDisplayMode(.inline)
         

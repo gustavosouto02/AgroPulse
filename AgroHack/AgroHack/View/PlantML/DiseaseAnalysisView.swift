@@ -22,7 +22,7 @@ struct DiseaseAnalysisView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 24) {
 
-                    PickerPlants()
+                    PickerPlants(viewModel: viewModel)
                         .padding(.horizontal, 20)
                         .padding(.top)
 
@@ -55,9 +55,11 @@ struct DiseaseAnalysisView: View {
             runAnalysis(image: image)
         }
         .onChange(of: viewModel.vegetable) { _, _ in
-            if let image = currentUIImage {
-                runAnalysis(image: image)
-            }
+            currentUIImage = nil
+            viewModel.selectedImageData = nil
+            viewModel.classificationLabel = ""
+            
+            
         }
         .navigationTitle("Folhas")
         .navigationBarTitleDisplayMode(.inline)

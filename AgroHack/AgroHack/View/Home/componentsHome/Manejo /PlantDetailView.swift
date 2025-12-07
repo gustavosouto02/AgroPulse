@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlantDetailView: View {
-    @EnvironmentObject var chatVm: ChatBotViewModel
+
     @Environment(\.dismiss) private var dismiss
     let plant: PlantModel
     

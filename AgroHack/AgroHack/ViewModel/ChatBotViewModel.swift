@@ -20,29 +20,44 @@ class ChatBotViewModel: ObservableObject {
     @Published var messages: [Message] = []
     @Published var isLoading: Bool = false
 
-    private let manager: ManagerChatProtocol
-
+    //private let manager: ManagerChatProtocol
+    private let manager: ManagerChat
     var plantModel: PlantModel?
-
-    init(plantModel: PlantModel?) {
-        self.plantModel = plantModel
-
-        // transforma PlantModel em PlantInfo
-        let plant = PlantModel(
-            id: UUID(),
-            name: plantModel?.name ?? "",
-            cultura: plantModel?.cultura ?? "",
-            solo: plantModel?.solo ?? "",
-            clima: plantModel?.clima ?? "",
-            area: plantModel?.area ?? "",
-            estagio: plantModel?.estagio ?? .Inicial,
-            fertilizantes: plantModel?.fertilizantes ?? "",
-            irrigacao: plantModel?.irrigacao ?? "",
-            tipoPraga: plantModel?.tipoPraga ?? ""
-        )
-
-        self.manager = ManagerChat(plantModel: plant)
-    }
+    init() { // 1. Inicializador sem argumentos para o App.swift
+            // Inicialize o manager sem planta
+            self.manager = ManagerChat(plantModel: nil)
+        }
+    
+    func configureChat(with plant: PlantModel) {
+            // Define a planta no Manager
+            manager.setPlant(plant)
+            
+            // Limpa mensagens anteriores
+            messages = []
+            
+            // Inicia a conversa com o prompt inicial (opcional: ou use a função startTraining)
+            // Por enquanto, apenas limpa e prepara o Manager.
+        }
+    
+//    init(plantModel: PlantModel?) {
+//        self.plantModel = plantModel
+//
+//        // transforma PlantModel em PlantInfo
+//        let plant = PlantModel(
+//            id: UUID(),
+//            name: plantModel?.name ?? "",
+//            cultura: plantModel?.cultura ?? "",
+//            solo: plantModel?.solo ?? "",
+//            clima: plantModel?.clima ?? "",
+//            area: plantModel?.area ?? "",
+//            estagio: plantModel?.estagio ?? .Inicial,
+//            fertilizantes: plantModel?.fertilizantes ?? "",
+//            irrigacao: plantModel?.irrigacao ?? "",
+//            tipoPraga: plantModel?.tipoPraga ?? ""
+//        )
+//
+//        self.manager = ManagerChat(plantModel: plant)
+//    }
 
     private func addAIMessage(_ text: String) {
         messages.append(Message(text: text, isUser: false))

@@ -60,6 +60,7 @@ struct HomeView: View {
                 }
                 .navigationDestination(for: PlantModel.self) { plant in
                     PlantDetailView(plant: plant)
+                        .environmentObject(chatVm)
                 }
                 .navigationDestination(for: String.self) { value in
                     if value == "NotificationView" {

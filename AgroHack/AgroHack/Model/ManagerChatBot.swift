@@ -23,9 +23,15 @@ final class ManagerChat: ManagerChatProtocol {
 
     private var plantModel: PlantModel?
 
-    init(plantModel: PlantModel?) {
-        self.plantModel = plantModel
-    }
+    init(plantModel: PlantModel? = nil) { // Permite inicialização sem planta
+            self.plantModel = plantModel
+        }
+
+        func setPlant(_ plant: PlantModel) { // Nova função para configurar
+            self.plantModel = plant
+            // Resetar o chat quando a planta é configurada
+            self.chat = nil
+        }
 
     private func ensureChat() throws {
         if chat == nil {

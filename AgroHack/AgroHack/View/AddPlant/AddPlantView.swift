@@ -193,7 +193,17 @@ struct AddPlantView: View {
 
                 // MARK: - Botão
                 Button {
-                    addPlantViewModel.salvar(context: modelContext)
+                    do {
+                        // Tenta salvar, se falhar, vai para o bloco catch
+                        try addPlantViewModel.salvar(context: modelContext)
+                        
+                        // SUCESSO: Apenas fecha a tela se o salvamento funcionou
+                        dismiss()
+                        
+                    } catch {
+                        // FALHA: Trata o erro (Não fecha a tela e notifica o usuário)
+                        print("❌ Erro fatal ao salvar a planta: \(error)")
+                    }
                 } label: {
                     Text("Salvar nova colheita")
                         .font(.headline)

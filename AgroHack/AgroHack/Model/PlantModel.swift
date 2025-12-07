@@ -7,9 +7,10 @@
 
 import Foundation
 import SwiftData
+import Combine
 
 @Model
-class PlantModel: Identifiable {
+class PlantModel: Identifiable, ObservableObject {
     var id: UUID = UUID()
     var name: String
     var image: Data?

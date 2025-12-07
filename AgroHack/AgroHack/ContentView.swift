@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     
-    
     var body: some View {
 
             TabView {
@@ -30,12 +29,6 @@ struct ContentView: View {
                 HelpView()
                     .tabItem {
                         Label("Ajuda", systemImage: "questionmark.circle")
-                    }
-                   
-                // 4. Transporte
-                Text("Transporte")
-                    .tabItem {
-                        Label("Transporte", systemImage: "truck.box.fill")
                     }
             }
             .tint(Color("colorPrimal")) // Cor dos ícones ativos na TabView

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PickerPlants: View {
-    @ObservedObject var viewModel = ControlMLViewModel()
+    @ObservedObject var viewModel : ControlMLViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -44,8 +44,4 @@ struct PickerPlants: View {
         case .soybean: return "Soja"
         }
     }
-}
-
-#Preview {
-    PickerPlants()
 }

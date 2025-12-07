@@ -122,7 +122,7 @@ struct SearchBestSeasonView: View {
             }
         }
         .background(Color(.systemGray6))
-        .navigationTitle("Início")
+       // .navigationTitle("Início")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {

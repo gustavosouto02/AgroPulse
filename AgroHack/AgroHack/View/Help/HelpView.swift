@@ -55,7 +55,7 @@ struct HelpView: View {
                 switch category.name {
                 case "Solo":
                     ColorTestView()
-                        .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
+                        //.toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
                     
                 case "Folhas":
                     DiseaseAnalysisView()

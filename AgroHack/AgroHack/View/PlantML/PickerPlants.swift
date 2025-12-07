@@ -9,22 +9,40 @@ import SwiftUI
 
 struct PickerPlants: View {
     @ObservedObject var viewModel = ControlMLViewModel()
-
+    
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Selecione a cultura:")
                 .font(.headline)
-                .foregroundColor(.gray)
+                //.foregroundColor(.gray)
             
-            // Mapeamos o Enum TypeVegetables para a UI
-            Picker("Cultura", selection: $viewModel.vegetable) {
-                Text("Tomate").tag(TypeVegetables.tomato)
-                Text("Milho").tag(TypeVegetables.corn)
-                Text("Soja").tag(TypeVegetables.soybean)
+            Menu {
+                Button("Tomate") { viewModel.vegetable = .tomato }
+                Button("Milho") { viewModel.vegetable = .corn }
+                Button("Soja") { viewModel.vegetable = .soybean }
+            } label: {
+                HStack {
+                    Text(displayName(for: viewModel.vegetable))
+                        .foregroundColor(.primary)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.gray.opacity(0.3))
+                )
             }
-            .pickerStyle(.segmented)
         }
-        .padding(.horizontal)
+    }
+    
+    private func displayName(for vegetable: TypeVegetables) -> String {
+        switch vegetable {
+        case .tomato: return "Tomate"
+        case .corn: return "Milho"
+        case .soybean: return "Soja"
+        }
     }
 }
 

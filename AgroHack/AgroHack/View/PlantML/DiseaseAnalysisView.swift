@@ -5,138 +5,43 @@
 //  Created by Gustavo Souto Pereira on 06/12/25.
 //
 
-//
-//  DiseaseAnalysisView.swift
-//  AgroHack
-//
-//  Created by Gustavo Souto Pereira on 06/12/25.
-//
-
 import SwiftUI
+
 struct DiseaseAnalysisView: View {
     @StateObject var viewModel = ControlMLViewModel()
     @State private var currentUIImage: UIImage?
     @State private var showCamera = false
     @State private var showGallery = false
-    
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
         ZStack {
-            Color(.systemGray6) // fundo geral
+            Color(.systemGray6)
                 .ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                // Barra verde fininha
-                Rectangle()
-                    .fill(Color("colorPrimal"))
-                    .frame(height: 5)
-                    .ignoresSafeArea(.container, edges: .top)
-                
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 24) {
-                        HeaderDiseases()
-                            .padding(.horizontal, 20)
-                            .padding(.top, 16)
-                        
-                        PickerPlants()
-                            .padding(.horizontal, 20)
-                        
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.gray.opacity(0.1))
-                                .frame(height: 300)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                )
-                            
-                            if let image = currentUIImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 300)
-                                    .cornerRadius(16)
-                            } else {
-                                VStack {
-                                    Image(systemName: "leaf.fill")
-                                        .font(.system(size: 50))
-                                        .foregroundColor(.green)
-                                    Text("Nenhuma foto selecionada")
-                                        .foregroundColor(.gray)
-                                }
-                            }
-                        }
+
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 24) {
+
+                    PickerPlants()
                         .padding(.horizontal, 20)
-                        
-                        VStack(spacing: 12) {
-                            Text("Diagnóstico:")
-                                .font(.subheadline)
-                                .textCase(.uppercase)
-                                .foregroundColor(.secondary)
-                            
-                            let rawLabel = viewModel.classificationLabel
-                            let displayLabel = displayLabel(for: rawLabel.isEmpty ? "..." : rawLabel)
-                            
-                            Text(displayLabel)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(colorForDiagnosis(displayLabel))
-                            
-                            if let info = getDiseaseInfo(for: rawLabel),
-                               !rawLabel.lowercased().contains("saudável") {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Sobre \(info.title):")
-                                        .font(.headline)
-                                    Text(info.description)
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                    
-                                    Text("Dicas rápidas:")
-                                        .font(.headline)
-                                    
-                                    ForEach(info.tips, id: \.self) { tip in
-                                        HStack(alignment: .top) {
-                                            Text("•")
-                                            Text(tip).font(.subheadline)
-                                        }
-                                    }
-                                }
-                                .padding()
-                                .background(Color.yellow.opacity(0.1))
-                                .cornerRadius(12)
-                            }
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
+                        .padding(.top)
+
+                    imageContainer
                         .padding(.horizontal, 20)
-                        
-                        HStack(spacing: 20) {
-                            Button(action: { showCamera = true }) {
-                                Label("Câmera", systemImage: "camera.fill")
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.green)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(12)
-                            }
-                            
-                            Button(action: { showGallery = true }) {
-                                Label("Galeria", systemImage: "photo.fill")
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(12)
-                            }
-                        }
+
+                    diagnosisCard
+                        .padding(.horizontal, 20)
+
+                    actionButtons
                         .padding(.horizontal, 20)
                         .padding(.bottom, 20)
-                    }
-                    .background(Color(.systemGray6)) // <-- garante que o fundo do ScrollView seja cinza
                 }
+                
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.white)
+                )
+                .padding(16)
             }
         }
         .sheet(isPresented: $showGallery) {
@@ -154,25 +59,140 @@ struct DiseaseAnalysisView: View {
                 runAnalysis(image: image)
             }
         }
+        .navigationTitle("Folhas")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(8)
+                }
+            }
+        }
+        .toolbarBackground(Color("colorPrimal"), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
     }
 
-    
+    // MARK: - Subviews
+
+    private var imageContainer: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.gray.opacity(0.1))
+                .frame(height: 300)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                )
+
+            if let image = currentUIImage {
+                GeometryReader { geo in
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipped()
+                }
+                .frame(height: 300)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+            } else {
+                VStack(spacing: 6) {
+                    Image(systemName: "camera")
+                        .font(.system(size: 50))
+                        .foregroundStyle(.secondary)
+
+                    Text("Nenhuma foto selecionada")
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+    }
+
+
+    private var diagnosisCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Diagnóstico:")
+                .font(.headline)
+                .foregroundColor(Color("colorPrimal"))
+
+            let rawLabel = viewModel.classificationLabel
+            let safeRaw = rawLabel.isEmpty ? "..." : rawLabel
+            let label = displayLabel(for: safeRaw)
+
+            Text(label)
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+
+            if let info = getDiseaseInfo(for: rawLabel),
+               !rawLabel.lowercased().contains("saudável") {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Sobre \(info.title):")
+                        .font(.headline)
+                        .foregroundColor(Color("colorPrimal"))
+                    Text(info.description)
+
+                    Text("Dicas rápidas:")
+                        .font(.headline)
+                        .foregroundColor(Color("colorPrimal"))
+
+                    ForEach(info.tips, id: \.self) { tip in
+                        HStack(alignment: .center) {
+                            Circle()
+                                .frame(width: 5, height: 5)
+                                .foregroundColor(Color("colorPrimal"))
+                            Text(tip)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.gray.opacity(0.1)))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+
+    private var actionButtons: some View {
+        HStack(spacing: 20) {
+            Button(action: { showCamera = true }) {
+                Label("Câmera", systemImage: "camera.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .font(.headline)
+                    .background(Color("colorPrimal"))
+                    .foregroundColor(.white)
+                    .cornerRadius(200)
+            }
+
+            Button(action: { showGallery = true }) {
+                Label("Galeria", systemImage: "photo.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .font(.headline)
+                    .background(Color("colorPrimal"))
+                    .foregroundColor(.white)
+                    .cornerRadius(200)
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
     private func runAnalysis(image: UIImage) {
         if let imageData = image.jpegData(compressionQuality: 0.8) {
             viewModel.selectedImageData = imageData
             viewModel.selectModel(selectedVegetable: viewModel.vegetable)
-        }
-    }
-    
-    func colorForDiagnosis(_ text: String) -> Color {
-        let lower = text.lowercased()
-        if text.isEmpty { return .primary }
-        if lower.contains("saudável") || lower.contains("healthy") {
-            return .green
-        } else {
-            return .red
         }
     }
 }

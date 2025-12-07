@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "image 126.png",
+      "filename" : "soloSF.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "image 127.png",
+      "filename" : "soloSF@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "image 128.png",
+      "filename" : "soloSF@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

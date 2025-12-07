@@ -30,7 +30,7 @@ struct HelpView: View {
                         
                         Spacer()
                     }
-                    .frame(height: 10) 
+                    .frame(height: 10)
                     .background(Color("colorPrimal"))
                     
                     ScrollView(.vertical, showsIndicators: false) {
@@ -49,29 +49,29 @@ struct HelpView: View {
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
-                        
-                        // Gerencia os destinos
-                        .navigationDestination(for: HelpCategory.self) { category in
-                            switch category.name {
-                            case "Solo":
-                                ColorTestView()
-                                    .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
-                                
-                            case "Folhas":
-                                DiseaseAnalysisView()
-                                    .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
-                                
-                            default:
-                                // Placeholder para as outras
-                                VStack {
-                                    Text("Funcionalidade: \(category.name)")
-                                        .font(.title)
-                                    Text("Em breve...")
-                                        .foregroundColor(.gray)
-                                }
-                                .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
-                            }
-                        }
+            
+            // Gerencia os destinos
+            .navigationDestination(for: HelpCategory.self) { category in
+                switch category.name {
+                case "Solo":
+                    ColorTestView()
+                        .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
+                    
+                case "Folhas":
+                    DiseaseAnalysisView()
+                        //.toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
+                    
+                default:
+                    // Placeholder para as outras
+                    VStack {
+                        Text("Funcionalidade: \(category.name)")
+                            .font(.title)
+                        Text("Em breve...")
+                            .foregroundColor(.gray)
+                    }
+                    .toolbar(.visible, for: .navigationBar) // <--- REATIVA A BARRA
+                }
+            }
         }
     }
 }

@@ -13,160 +13,166 @@
 //
 
 import SwiftUI
-
 struct DiseaseAnalysisView: View {
-    
-    // Usamos a ViewModel ORIGINAL, sem alterações
     @StateObject var viewModel = ControlMLViewModel()
-    
-    // Variável local apenas para exibir a foto na tela e controlar o Picker
     @State private var currentUIImage: UIImage?
-    
     @State private var showCamera = false
     @State private var showGallery = false
     
     var body: some View {
-            ScrollView {
-                VStack(spacing: 24) {
-                    Text("Dr. Planta")
-                        .font(Font.largeTitle.bold())
-                    // 1. Seletor de Planta
-                    VStack(alignment: .leading) {
-                        Text("Selecione a cultura:")
-                            .font(.headline)
-                            .foregroundColor(.gray)
+        ZStack {
+            Color(.systemGray6) // fundo geral
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Barra verde fininha
+                Rectangle()
+                    .fill(Color("colorPrimal"))
+                    .frame(height: 5)
+                    .ignoresSafeArea(.container, edges: .top)
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 24) {
+                        HeaderDiseases()
+                            .padding(.horizontal, 20)
+                            .padding(.top, 16)
                         
-                        // Mapeamos o Enum TypeVegetables para a UI
-                        Picker("Cultura", selection: $viewModel.vegetable) {
-                            Text("Tomate").tag(TypeVegetables.tomato)
-                            Text("Milho").tag(TypeVegetables.corn)
-                            Text("Soja").tag(TypeVegetables.soybean)
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    .padding(.horizontal)
-                    
-                    // 2. Área da Imagem
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.gray.opacity(0.1))
-                            .frame(height: 300)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                            )
+                        PickerPlants()
+                            .padding(.horizontal, 20)
                         
-                        if let image = currentUIImage {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color.gray.opacity(0.1))
                                 .frame(height: 300)
-                                .cornerRadius(16)
-                        } else {
-                            VStack {
-                                Image(systemName: "leaf.fill")
-                                    .font(.system(size: 50))
-                                    .foregroundColor(.green)
-                                Text("Nenhuma foto selecionada")
-                                    .foregroundColor(.gray)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                )
+                            
+                            if let image = currentUIImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 300)
+                                    .cornerRadius(16)
+                            } else {
+                                VStack {
+                                    Image(systemName: "leaf.fill")
+                                        .font(.system(size: 50))
+                                        .foregroundColor(.green)
+                                    Text("Nenhuma foto selecionada")
+                                        .foregroundColor(.gray)
+                                }
                             }
                         }
-                    }
-                    .padding(.horizontal)
-                    
-                    // 3. Resultado da Análise
-                    VStack(spacing: 8) {
-                        Text("Diagnóstico:")
-                            .font(.subheadline)
-                            .textCase(.uppercase)
-                            .foregroundColor(.secondary)
+                        .padding(.horizontal, 20)
                         
-                        // Exibimos o classificationLabel da ViewModel original
-                        Text(viewModel.classificationLabel.isEmpty ? "..." : viewModel.classificationLabel)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(colorForDiagnosis(viewModel.classificationLabel))
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .shadow(radius: 2)
-                    .padding(.horizontal)
-
-                    // 4. Botões de Ação
-                    HStack(spacing: 20) {
-                        Button(action: { showCamera = true }) {
-                            Label("Câmera", systemImage: "camera.fill")
-                                .frame(maxWidth: .infinity)
+                        VStack(spacing: 12) {
+                            Text("Diagnóstico:")
+                                .font(.subheadline)
+                                .textCase(.uppercase)
+                                .foregroundColor(.secondary)
+                            
+                            let rawLabel = viewModel.classificationLabel
+                            let displayLabel = displayLabel(for: rawLabel.isEmpty ? "..." : rawLabel)
+                            
+                            Text(displayLabel)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(colorForDiagnosis(displayLabel))
+                            
+                            if let info = getDiseaseInfo(for: rawLabel),
+                               !rawLabel.lowercased().contains("saudável") {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Sobre \(info.title):")
+                                        .font(.headline)
+                                    Text(info.description)
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                    
+                                    Text("Dicas rápidas:")
+                                        .font(.headline)
+                                    
+                                    ForEach(info.tips, id: \.self) { tip in
+                                        HStack(alignment: .top) {
+                                            Text("•")
+                                            Text(tip).font(.subheadline)
+                                        }
+                                    }
+                                }
                                 .padding()
-                                .background(Color.green)
-                                .foregroundColor(.white)
+                                .background(Color.yellow.opacity(0.1))
                                 .cornerRadius(12)
+                            }
                         }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+                        .padding(.horizontal, 20)
                         
-                        Button(action: { showGallery = true }) {
-                            Label("Galeria", systemImage: "photo.fill")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(12)
+                        HStack(spacing: 20) {
+                            Button(action: { showCamera = true }) {
+                                Label("Câmera", systemImage: "camera.fill")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.green)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                            }
+                            
+                            Button(action: { showGallery = true }) {
+                                Label("Galeria", systemImage: "photo.fill")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                            }
                         }
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 20)
                     }
-                    .padding(.horizontal)
-                }
-                .padding(.vertical)
-            }
-            
-            // Sheets para Camera e Galeria
-            .sheet(isPresented: $showGallery) {
-                ImagePicker(image: $currentUIImage)
-            }
-            .sheet(isPresented: $showCamera) {
-                CameraPicker(image: $currentUIImage)
-            }
-            
-            // -----------------------------------------------------------
-            // A MÁGICA ACONTECE AQUI: Conectando UI -> ViewModel Original
-            // -----------------------------------------------------------
-            
-            // 1. Quando o usuário escolhe uma foto nova
-            .onChange(of: currentUIImage) { _, newImage in
-                guard let image = newImage else { return }
-                runAnalysis(image: image)
-            }
-            
-            // 2. Quando o usuário troca a planta (mas já tem foto)
-            .onChange(of: viewModel.vegetable) { _, _ in
-                if let image = currentUIImage {
-                    runAnalysis(image: image)
+                    .background(Color(.systemGray6)) // <-- garante que o fundo do ScrollView seja cinza
                 }
             }
         }
+        .sheet(isPresented: $showGallery) {
+            ImagePicker(image: $currentUIImage)
+        }
+        .sheet(isPresented: $showCamera) {
+            CameraPicker(image: $currentUIImage)
+        }
+        .onChange(of: currentUIImage) { _, newImage in
+            guard let image = newImage else { return }
+            runAnalysis(image: image)
+        }
+        .onChange(of: viewModel.vegetable) { _, _ in
+            if let image = currentUIImage {
+                runAnalysis(image: image)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden)
+    }
+
     
-    // Função auxiliar para adaptar os dados para a sua ViewModel antiga
     private func runAnalysis(image: UIImage) {
-        // 1. Converte UIImage para Data (que sua VM exige)
         if let imageData = image.jpegData(compressionQuality: 0.8) {
-            
-            // 2. Injeta na ViewModel
             viewModel.selectedImageData = imageData
-            
-            // 3. Roda a função original da ViewModel
             viewModel.selectModel(selectedVegetable: viewModel.vegetable)
         }
     }
     
-    // Helper visual para cor do texto
     func colorForDiagnosis(_ text: String) -> Color {
         let lower = text.lowercased()
         if text.isEmpty { return .primary }
         if lower.contains("saudável") || lower.contains("healthy") {
             return .green
         } else {
-            return .red // Doença detectada
+            return .red
         }
     }
 }

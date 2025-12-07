@@ -34,6 +34,21 @@ struct HomeView: View {
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal)
                             .padding(.top, -100)
+                        
+                        NavigationLink(destination: SearchBestSeasonView(), label: {
+                            HStack{
+                                Text("Saiba a melhor época para o seu plantio")
+                                    .font(.headline)
+                                    .foregroundColor(Color.colorPrimal)
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(Color.colorPrimal)
+                            }
+                            .background(Color.colorSecondary)
+                            .shadow(radius: 12)
+                            .cornerRadius(16)
+                            .frame(width: 363, height: 56)
+                            .padding()
+                        })
         
                         CurrentCropsSection()
                             .padding()

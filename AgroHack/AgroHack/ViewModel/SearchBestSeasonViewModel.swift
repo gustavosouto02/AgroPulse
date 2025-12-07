@@ -13,14 +13,25 @@ class SearchBestSeasonViewModel: ObservableObject {
     @Published var idCultura: Int = 0
     @Published var codigoIBGE: String = ""
     @Published var riscoMaximo: Int = 0
+    @Published var tipoSolo: EnumTiposSolo = .Latossolo
     @Published var soloAD: String = "AD1"
     @Published var cicloDoGrao:GroupCicleType = .Grupo1
+    
+    var tiposSolo: [EnumTiposSolo] = EnumTiposSolo.allCases
 
     private let baseURL = "https://api.cnptia.embrapa.br/agritec/v2/zoneamento"
     private let token = "3481b3b3-e2af-3be8-986f-3fb568cde9ff"
     
     func getBestSeason() async throws -> BestSeasonModel{
         let BestSeasons = try await requestAPI()
+        switch tipoSolo {
+        case .Latossolo:
+            soloAD = "AD1"
+        case .Litossolo:
+            soloAD = "AD3"
+        case .TerraRoxa:
+            soloAD = "AD6"
+        }
         let filtered = BestSeasons.filter{ $0.solo == soloAD && $0.ciclo == cicloDoGrao.rawValue }
         print("vai chamar o request da API")
         print("-----------------------")

@@ -8,7 +8,7 @@
 import Foundation
 
 enum EnumTiposSolo: String, CaseIterable, Codable, Hashable {
-    case Latossolo
-    case Litossolo
-    case TerraRoxa
+    case Latossolo = "Latossolo"
+    case Litossolo = "Litossolo"
+    case TerraRoxa = "Terra Roxa"
 }

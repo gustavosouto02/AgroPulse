@@ -5,9 +5,9 @@
 //  Created by Filipi Romão on 03/12/25.
 //
 
+import SwiftUI
 import Combine
 import CoreML
-import Foundation
 import UIKit
 
 enum TypeVegetables {
@@ -22,13 +22,12 @@ class ControlMLViewModel: ObservableObject {
     @Published var classificationLabel: String = ""
     @Published var prediction: String = ""
     @Published var selectedImageData: Data? = nil
-    private var image: UIImage?
 
+    // MARK: - Seleciona o modelo e faz a previsão
     func selectModel(selectedVegetable: TypeVegetables) {
         do {
             let config = MLModelConfiguration()
             var mlModel: MLModel?
-            print("Selected vegetable:", selectedVegetable)
 
             switch selectedVegetable {
             case .corn:
@@ -40,69 +39,67 @@ class ControlMLViewModel: ObservableObject {
             }
 
             guard let model = mlModel else { return }
-            guard let data = selectedImageData, let uiImage = convertDataToUIImage(data: data) else { return }
-            let resizedImage = resizeImage(
-                uiImage,
-                targetSize: CGSize(width: 299, height: 299)
-            )
+            guard let data = selectedImageData, let uiImage = UIImage(data: data) else { return }
 
-            guard let buffer = bufferImage(resizedImage) else {
+            // 1️⃣ Redimensiona mantendo proporção e fundo branco
+            let resizedImage = resizeImageKeepingAspect(uiImage, targetSize: CGSize(width: 299, height: 299))
 
-                return
-            }
+            // 2️⃣ Converte para PixelBuffer compatível com Core ML
+            guard let buffer = pixelBuffer(from: resizedImage, width: 299, height: 299) else { return }
 
-            let input = try MLDictionaryFeatureProvider(
-                dictionary: ["image": MLFeatureValue(pixelBuffer: buffer)]
-            )
-
+            // 3️⃣ Cria input e faz previsão
+            let input = try MLDictionaryFeatureProvider(dictionary: ["image": MLFeatureValue(pixelBuffer: buffer)])
             let output = try model.prediction(from: input)
 
+            // 4️⃣ Atualiza label na main thread
             if let label = output.featureValue(for: "target")?.stringValue {
                 DispatchQueue.main.async {
                     self.classificationLabel = label
-                    print(label)
+                    print("Prediction:", label)
                 }
             }
 
-
         } catch {
-            print("Error loading model / predicting: \(error)")
+            print("Erro ao carregar modelo ou prever: \(error)")
         }
     }
 
-    private func convertDataToUIImage(data: Data) -> UIImage? {
-        UIImage(data: data)
-    }
+    // MARK: - Redimensiona mantendo proporção e centralizando
+    private func resizeImageKeepingAspect(_ image: UIImage, targetSize: CGSize) -> UIImage {
+        let aspectWidth = targetSize.width / image.size.width
+        let aspectHeight = targetSize.height / image.size.height
+        let aspectRatio = min(aspectWidth, aspectHeight)
 
-    private func resizeImage(_ image: UIImage, targetSize: CGSize) -> UIImage {
+        let newSize = CGSize(width: image.size.width * aspectRatio, height: image.size.height * aspectRatio)
         let renderer = UIGraphicsImageRenderer(size: targetSize)
+
         return renderer.image { _ in
-            image.draw(in: CGRect(origin: .zero, size: targetSize))
+            // Fundo branco
+            UIColor.white.setFill()
+            UIBezierPath(rect: CGRect(origin: .zero, size: targetSize)).fill()
+
+            // Desenha a imagem centralizada
+            let x = (targetSize.width - newSize.width) / 2
+            let y = (targetSize.height - newSize.height) / 2
+            image.draw(in: CGRect(x: x, y: y, width: newSize.width, height: newSize.height))
         }
     }
 
-    func bufferImage(_ image: UIImage) -> CVPixelBuffer? {
-        let width = Int(image.size.width)
-        let height = Int(image.size.height)
-
-        var pixelBuffer: CVPixelBuffer?
+    // MARK: - Converte UIImage para PixelBuffer compatível com Core ML
+    private func pixelBuffer(from image: UIImage, width: Int, height: Int) -> CVPixelBuffer? {
         let attrs = [
             kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue!,
             kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue!
         ] as CFDictionary
 
-        CVPixelBufferCreate(
-            kCFAllocatorDefault,
-            width,
-            height,
-            kCVPixelFormatType_32BGRA,
-            attrs,
-            &pixelBuffer
-        )
+        var pixelBuffer: CVPixelBuffer?
+        CVPixelBufferCreate(kCFAllocatorDefault, width, height,
+                            kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
 
         guard let buffer = pixelBuffer else { return nil }
 
         CVPixelBufferLockBaseAddress(buffer, [])
+        defer { CVPixelBufferUnlockBaseAddress(buffer, []) }
 
         guard let context = CGContext(
             data: CVPixelBufferGetBaseAddress(buffer),
@@ -111,23 +108,10 @@ class ControlMLViewModel: ObservableObject {
             bitsPerComponent: 8,
             bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
             space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue
-        ) else {
-            CVPixelBufferUnlockBaseAddress(buffer, [])
-            return nil
-        }
+            bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue
+        ) else { return nil }
 
-        guard let cgImage = image.cgImage else {
-            CVPixelBufferUnlockBaseAddress(buffer, [])
-            return nil
-        }
-
-        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-
-        CVPixelBufferUnlockBaseAddress(buffer, [])
-
+        context.draw(image.cgImage!, in: CGRect(x: 0, y: 0, width: width, height: height))
         return buffer
     }
-
-
 }

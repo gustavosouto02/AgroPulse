@@ -1,15 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "weatherCard 2.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "WeatherCard.svg",
+      "filename" : "weatherCard 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "weatherCard 3.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

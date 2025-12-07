@@ -47,7 +47,7 @@ struct HomeView: View {
                             .shadow(radius: 12)
                             .cornerRadius(16)
                             .frame(width: 363, height: 56)
-                            .padding()
+                            .padding(.horizontal)
                         })
         
                         CurrentCropsSection()

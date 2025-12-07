@@ -11,114 +11,194 @@ struct SearchBestSeasonView: View {
     @StateObject var bestSeasviewModel = SearchBestSeasonViewModel()
     @State var bestSeasons: [BestSeasonModel] = []
     @State var bestSeason: BestSeasonModel?
-
+    @Environment(\.dismiss) private var dismiss
+    
     var cicleTypes: [GroupCicleType] = GroupCicleType.allCases
-
+    var riscoOptions: [Int] = [20, 30, 40]
 
     var body: some View {
-        VStack {
-            Text("Sua melhor época")
-                .font(.largeTitle)
-                .fontWeight(.semibold)
-            Text(
-                "Entenda o período ideal para ter mais sucesso na sua plantação"
-            )
-            .font(.subheadline)
-        }
-        .padding()
-        VStack {
-            Text("Preencha os dados abaixo")
-                .font(.title3)
-                .fontWeight(.medium)
-            VStack {
-                TextField(
-                    "insira o codigo do IBGE",
-                    text: $bestSeasviewModel.codigoIBGE
-                )
-                .keyboardType(.decimalPad)
-                Divider()
-                TextField(
-                    "insira o codigo da cultura",
-                    value: $bestSeasviewModel.idCultura,
-                    format: .number
-                )
-                .keyboardType(.decimalPad)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // Título e subtítulo
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Sua melhor época")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.black)
+                    
+                    Text("Entenda o período ideal para ter mais sucesso na sua plantação")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
                 
-                Menu {
-                    ForEach(bestSeasviewModel.tiposSolo, id: \.self) { solo in
-                        Button("\(solo.rawValue)") {
-                            bestSeasviewModel.tipoSolo = solo
-                        }
+                // Instrução
+                Text("Preencha os dados abaixo")
+                    .font(.title3)
+                    .fontWeight(.medium)
+                    .foregroundColor(.black)
+                    .padding(.horizontal)
+                
+                // Primeiro Card - Código IBGE e Cultura
+                VStack(spacing: 0) {
+                    // Campo Código IBGE
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Código IBGE")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("colorPrimal"))
+                        
+                        TextField("", text: $bestSeasviewModel.codigoIBGE)
+                            .keyboardType(.decimalPad)
+                            .foregroundColor(.black)
+                            .padding(.bottom, 4)
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
                     }
-                } label: {
-                    HStack {
-                        Text(
-                            "Tipo de solo: \(bestSeasviewModel.tipoSolo.rawValue)"
-                        )
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    
+                    // Campo Cultura
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Cultura")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("colorPrimal"))
+                        
+                        TextField("", value: $bestSeasviewModel.idCultura, format: .number)
+                            .keyboardType(.decimalPad)
+                            .foregroundColor(.black)
+                            .padding(.bottom, 4)
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    .padding(.bottom, 16)
                 }
-            }
-            .padding()
-            .frame(width: 363)
-            .background(Color.white)
-            .cornerRadius(18)
-            .shadow(color: Color.black.opacity(0.05), radius: 5, y: 3)
-            .padding(.horizontal)
-
-            VStack {
-                Menu {
-                    Button("20") {
-                        bestSeasviewModel.riscoMaximo = 20
-                    }
-                    Button("30") {
-                        bestSeasviewModel.riscoMaximo = 30
-                    }
-                    Button("40") {
-                        bestSeasviewModel.riscoMaximo = 40
-                    }
-                } label: {
-                    HStack {
-                        Text("Risco máximo aceito")
-                        Image(systemName: "chevron.up.chevron.down")
-                    }
-                }
-
-                Menu {
-                    ForEach(cicleTypes, id: \.self) { cicle in
-                        Button("\(cicle.rawValue)") {
-                            bestSeasviewModel.cicloDoGrao = cicle
-                        }
-                    }
-                } label: {
-                    HStack {
-                        Text(
-                            "Tipo de grao: \(bestSeasviewModel.cicloDoGrao.rawValue)"
-                        )
-                    }
-                }
-            }.padding()
-                .frame(width: 363)
                 .background(Color.white)
                 .cornerRadius(18)
                 .shadow(color: Color.black.opacity(0.05), radius: 5, y: 3)
                 .padding(.horizontal)
-
-        }
-
-        Button("Buscar melhor epoca para plantio") {
-            print("Vai buscar melhor epoca")
-            Task {
-                //                bestSeasons = try await bestSeasviewModel.getBestSeason()
-
-                bestSeason = try await bestSeasviewModel.getBestSeason()
-                print(bestSeason)
-
+                
+                // Segundo Card - Risco máximo e Tipo de grão
+                VStack(spacing: 0) {
+                    // Campo Risco máximo aceito
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Risco máximo aceito")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("colorPrimal"))
+                        
+                        Menu {
+                            ForEach(riscoOptions, id: \.self) { risco in
+                                Button("\(risco)") {
+                                    bestSeasviewModel.riscoMaximo = risco
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(bestSeasviewModel.riscoMaximo == 0 ? "" : "\(bestSeasviewModel.riscoMaximo)")
+                                    .foregroundColor(bestSeasviewModel.riscoMaximo == 0 ? .gray.opacity(0.6) : .black)
+                                Spacer()
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.bottom, 4)
+                        }
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    
+                    // Campo Tipo de grão
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Tipo de grão")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("colorPrimal"))
+                        
+                        Menu {
+                            ForEach(cicleTypes, id: \.self) { ciclo in
+                                Button(ciclo.rawValue) {
+                                    bestSeasviewModel.cicloDoGrao = ciclo
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(bestSeasviewModel.cicloDoGrao.rawValue)
+                                    .foregroundColor(.black)
+                                Spacer()
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.bottom, 4)
+                        }
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    .padding(.bottom, 16)
+                }
+                .background(Color.white)
+                .cornerRadius(18)
+                .shadow(color: Color.black.opacity(0.05), radius: 5, y: 3)
+                .padding(.horizontal)
+                
+                // Botão de ação
+                Button(action: {
+                    Task {
+                        bestSeason = try await bestSeasviewModel.getBestSeason()
+                        print(bestSeason)
+                    }
+                }) {
+                    Text("Calcular melhor opção")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color("colorPrimal"))
+                        .cornerRadius(30)
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 32)
             }
         }
-
+        .background(Color(.systemGray6))
+        .navigationTitle("Início")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(8)
+                }
+            }
+        }
+        .toolbarBackground(Color("colorPrimal"), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
 
 #Preview {
-    SearchBestSeasonView()
+    NavigationStack {
+        SearchBestSeasonView()
+    }
 }

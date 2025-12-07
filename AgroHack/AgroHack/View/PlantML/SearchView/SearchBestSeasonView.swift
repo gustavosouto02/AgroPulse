@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchBestSeasonView: View {
-    @StateObject var bestSeasviewModel = SearchBestSeasonViewModel()
+    @StateObject var bestSeasonViewModel = SearchBestSeasonViewModel()
     @State var bestSeasons: [BestSeasonModel] = []
     @State var bestSeason: BestSeasonModel?
     @Environment(\.dismiss) private var dismiss
@@ -19,19 +19,8 @@ struct SearchBestSeasonView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                // Título e subtítulo
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Sua melhor época")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.black)
-                    
-                    Text("Entenda o período ideal para ter mais sucesso na sua plantação")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .padding(.horizontal)
-                .padding(.top, 8)
+                
+                HeaderSearch()
                 
                 // Instrução
                 Text("Preencha os dados abaixo")
@@ -41,48 +30,7 @@ struct SearchBestSeasonView: View {
                     .padding(.horizontal)
                 
                 // Primeiro Card - Código IBGE e Cultura
-                VStack(spacing: 0) {
-                    // Campo Código IBGE
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Código IBGE")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("colorPrimal"))
-                        
-                        TextField("", text: $bestSeasviewModel.codigoIBGE)
-                            .keyboardType(.decimalPad)
-                            .foregroundColor(.black)
-                            .padding(.bottom, 4)
-                        
-                        Divider()
-                            .background(Color.gray.opacity(0.3))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
-                    
-                    // Campo Cultura
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Cultura")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("colorPrimal"))
-                        
-                        TextField("", value: $bestSeasviewModel.idCultura, format: .number)
-                            .keyboardType(.decimalPad)
-                            .foregroundColor(.black)
-                            .padding(.bottom, 4)
-                        
-                        Divider()
-                            .background(Color.gray.opacity(0.3))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
-                    .padding(.bottom, 16)
-                }
-                .background(Color.white)
-                .cornerRadius(18)
-                .shadow(color: Color.black.opacity(0.05), radius: 5, y: 3)
-                .padding(.horizontal)
+                CodigoECulturaCard(vm: bestSeasonViewModel)
                 
                 // Segundo Card - Risco máximo e Tipo de grão
                 VStack(spacing: 0) {
@@ -96,13 +44,13 @@ struct SearchBestSeasonView: View {
                         Menu {
                             ForEach(riscoOptions, id: \.self) { risco in
                                 Button("\(risco)") {
-                                    bestSeasviewModel.riscoMaximo = risco
+                                    bestSeasonViewModel.riscoMaximo = risco
                                 }
                             }
                         } label: {
                             HStack {
-                                Text(bestSeasviewModel.riscoMaximo == 0 ? "" : "\(bestSeasviewModel.riscoMaximo)")
-                                    .foregroundColor(bestSeasviewModel.riscoMaximo == 0 ? .gray.opacity(0.6) : .black)
+                                Text(bestSeasonViewModel.riscoMaximo == 0 ? "" : "\(bestSeasonViewModel.riscoMaximo)")
+                                    .foregroundColor(bestSeasonViewModel.riscoMaximo == 0 ? .gray.opacity(0.6) : .black)
                                 Spacer()
                                 Image(systemName: "chevron.up.chevron.down")
                                     .font(.system(size: 12))
@@ -127,12 +75,12 @@ struct SearchBestSeasonView: View {
                         Menu {
                             ForEach(cicleTypes, id: \.self) { ciclo in
                                 Button(ciclo.rawValue) {
-                                    bestSeasviewModel.cicloDoGrao = ciclo
+                                    bestSeasonViewModel.cicloDoGrao = ciclo
                                 }
                             }
                         } label: {
                             HStack {
-                                Text(bestSeasviewModel.cicloDoGrao.rawValue)
+                                Text(bestSeasonViewModel.cicloDoGrao.rawValue)
                                     .foregroundColor(.black)
                                 Spacer()
                                 Image(systemName: "chevron.up.chevron.down")
@@ -155,24 +103,22 @@ struct SearchBestSeasonView: View {
                 .padding(.horizontal)
                 
                 // Botão de ação
-                Button(action: {
-                    Task {
-                        bestSeason = try await bestSeasviewModel.getBestSeason()
-                        print(bestSeason)
+                NavigationLink(destination: ResultSeasonView(bestSeasonviewModel: bestSeasonViewModel), label: {
+                    HStack{
+                        Text("Calcular melhor opção")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color("colorPrimal"))
+                            .cornerRadius(30)
                     }
-                }) {
-                    Text("Calcular melhor opção")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(Color("colorPrimal"))
-                        .cornerRadius(30)
-                }
-                .padding(.horizontal)
-                .padding(.top, 8)
-                .padding(.bottom, 32)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    .padding(.bottom, 32)
+                })
+                
             }
         }
         .background(Color(.systemGray6))

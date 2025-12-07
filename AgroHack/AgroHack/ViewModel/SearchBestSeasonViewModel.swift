@@ -9,13 +9,21 @@ import Combine
 import Foundation
 
 class SearchBestSeasonViewModel: ObservableObject {
-
+    
+    @Published var cultura: String = ""
     @Published var idCultura: Int = 0
     @Published var codigoIBGE: String = ""
     @Published var riscoMaximo: Int = 0
     @Published var tipoSolo: EnumTiposSolo = .Latossolo
-    @Published var soloAD: String = "AD1"
+    @Published var soloAD: [String] = ["AD1"]
     @Published var cicloDoGrao:GroupCicleType = .Grupo1
+    
+    @Published var diaIni: Int = 0
+    @Published var mesIni: Int = 0
+    @Published var diaFim: Int = 0
+    @Published var mesFim: Int = 0
+    
+    @Published var portaria: String = ""
     
     var tiposSolo: [EnumTiposSolo] = EnumTiposSolo.allCases
 
@@ -26,13 +34,22 @@ class SearchBestSeasonViewModel: ObservableObject {
         let BestSeasons = try await requestAPI()
         switch tipoSolo {
         case .Latossolo:
-            soloAD = "AD1"
+            soloAD = ["AD1", "AD2"]
         case .Litossolo:
-            soloAD = "AD3"
+            soloAD = ["AD3"]
         case .TerraRoxa:
-            soloAD = "AD6"
+            soloAD = ["AD6"]
         }
-        let filtered = BestSeasons.filter{ $0.solo == soloAD && $0.ciclo == cicloDoGrao.rawValue }
+        let filtered = BestSeasons.filter { season in
+            soloAD.contains(season.solo) && season.ciclo == cicloDoGrao.rawValue
+        }
+        if let first = filtered.first {
+            diaIni = first.diaIni
+            mesIni = first.mesIni
+            diaFim = first.diaFim
+            mesFim = first.mesFim
+            portaria = first.portaria
+        }
         print("vai chamar o request da API")
         print("-----------------------")
         print("Aqui está fazendo a filtragem para definir a melhor temporada")
@@ -42,6 +59,14 @@ class SearchBestSeasonViewModel: ObservableObject {
     }
 
     private func requestAPI() async throws -> [BestSeasonModel] {
+        switch cultura{
+        case "Feijão":
+            idCultura = 62
+        case "Soja":
+            idCultura = 60
+        default:
+            return []
+        }
         print("---------------")
         print("A API foi chamada")
         print("Os valores são idCultura: \(idCultura), codigoIBGE:\(codigoIBGE), risco maximo: \(riscoMaximo)")

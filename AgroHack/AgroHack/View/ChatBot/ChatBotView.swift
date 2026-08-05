@@ -1,6 +1,6 @@
 //
 //  ChatBotView.swift
-//  AgroHack
+//  AgroPulse
 //
 
 import GoogleGenerativeAI

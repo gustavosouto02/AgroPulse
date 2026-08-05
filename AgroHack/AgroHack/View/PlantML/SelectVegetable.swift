@@ -1,6 +1,6 @@
 //
 //  SelectVegetable.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Filipi Romão on 03/12/25.
 //

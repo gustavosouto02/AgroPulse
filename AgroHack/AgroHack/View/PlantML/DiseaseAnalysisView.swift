@@ -1,6 +1,6 @@
 //
 //  DiseaseAnalysisView.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Gustavo Souto Pereira on 06/12/25.
 //

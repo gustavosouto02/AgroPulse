@@ -31,9 +31,9 @@ AgroPulse é um aplicativo iOS nativo focado em revolucionar o agronegócio atra
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/SEU_USUARIO/AgroHack.git
+   git clone https://github.com/SEU_USUARIO/AgroPulse.git
    ```
-2. Abra a pasta e dê um duplo clique no arquivo `AgroHack.xcodeproj` para abrir no **Xcode**.
+2. Abra a pasta e dê um duplo clique no arquivo `AgroPulse.xcodeproj` para abrir no **Xcode**.
 3. Aguarde o Xcode indexar os arquivos do projeto.
 4. Selecione um simulador (ex: iPhone 15 Pro) ou conecte seu iPhone físico.
 5. Clique no botão de **Run** (▶) ou pressione `Cmd + R` para compilar e rodar.

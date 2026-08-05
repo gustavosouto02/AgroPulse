@@ -1,13 +1,13 @@
 //
 //  HeaderHome.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Gustavo Souto Pereira on 04/12/25.
 //
 
 //
 //  HeaderHome.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Gustavo Souto Pereira on 04/12/25.
 //

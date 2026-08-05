@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Joao pedro Leonel on 03/12/25.
 //

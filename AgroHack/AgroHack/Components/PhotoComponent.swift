@@ -1,6 +1,6 @@
 //
 //  PhotoComponent.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Gustavo Souto Pereira on 03/12/25.
 //

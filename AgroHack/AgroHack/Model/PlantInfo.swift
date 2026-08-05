@@ -1,6 +1,6 @@
 //
 //  PlantInfo.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Filipi Romão on 04/12/25.
 //

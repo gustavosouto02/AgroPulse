@@ -1,6 +1,6 @@
 //
 //  HeaderResult.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Gustavo Souto Pereira on 07/12/25.
 //

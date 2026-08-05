@@ -1,6 +1,6 @@
 //
 //  GroupCicleType.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Filipi Romão on 06/12/25.
 //

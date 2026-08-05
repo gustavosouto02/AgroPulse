@@ -1,6 +1,6 @@
 //
 //  AgendaData.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created on 05/12/25.
 //

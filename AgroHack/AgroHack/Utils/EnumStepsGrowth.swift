@@ -1,6 +1,6 @@
 //
 //  EnumStepsGrowth.swift
-//  AgroHack
+//  AgroPulse
 //
 //  Created by Filipi Romão on 05/12/25.
 //

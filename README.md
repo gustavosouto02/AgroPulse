@@ -17,14 +17,15 @@ AgroHack é um aplicativo iOS nativo focado em revolucionar o agronegócio atrav
 - **Linguagem**: Swift
 - **Framework UI**: SwiftUI
 - **Inteligência Artificial**: CoreML & Vision Framework
-- **Arquitetura**: MVVM (Model-View-ViewModel)
+- **Arquitetura**: MVVM (Model-View-ViewModel)<img width="1206" height="2622" alt="Simulator 
+
 
 ## 📸 Screenshots
 *(Adicione aqui as imagens do seu aplicativo substituindo os links abaixo)*
 
-| Tela Inicial | Análise | Resultados |
+| Tela Inicial | Agenda | Ajuda |
 | :---: | :---: | :---: |
-| <img src="https://via.placeholder.com/250x500.png?text=Home" width="200"> | <img src="https://via.placeholder.com/250x500.png?text=IA" width="200"> | <img src="https://via.placeholder.com/250x500.png?text=Resultados" width="200"> |
+| <img src="https://github.com/user-attachments/assets/42c4eb96-76b1-46ea-b75c-49d1fd9bb3d5" width="200"> | <img src="https://github.com/user-attachments/assets/c3306b17-6d14-4d97-b415-f4a70c8efdc9" width="200"> | <img src="https://github.com/user-attachments/assets/7d291800-b7a7-4b37-8e73-e7a16ebde7c6" width="200"> |
 
 ## 💻 Como Rodar o Projeto
 

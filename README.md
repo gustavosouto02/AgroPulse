@@ -1,10 +1,10 @@
-# 🌾 AgroHack
+# 🌾 AgroPulse
 
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-blue?logo=swift&logoColor=white)
 ![iOS](https://img.shields.io/badge/iOS-16.0+-black?logo=apple&logoColor=white)
 ![CoreML](https://img.shields.io/badge/CoreML-Vision-orange)
 
-AgroHack é um aplicativo iOS nativo focado em revolucionar o agronegócio através da tecnologia e inteligência artificial (Visão Computacional). Desenvolvido durante o Hackathon **Hack Cerrado**.
+AgroPulse é um aplicativo iOS nativo focado em revolucionar o agronegócio através da tecnologia e inteligência artificial (Visão Computacional). Desenvolvido durante o Hackathon **Hack Cerrado**.
 
 ## 🚀 Funcionalidades Principais
 
@@ -43,4 +43,4 @@ AgroHack é um aplicativo iOS nativo focado em revolucionar o agronegócio atrav
 - **Gustavo Souto** - [GitHub](https://github.com/SEU_USUARIO)
 
 ---
-*Feito com 💚 para inovar o Agronegócio.*
+*Feito para inovar o Agronegócio.*
